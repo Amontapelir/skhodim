@@ -1,0 +1,6 @@
+#!/bin/sh
+# Keep history single-author: strip co-author and tool-attribution lines.
+msg_file="$1"
+tmp="$msg_file.tmp"
+grep -viE '^(co-authored-by:|.*generated with \[?claude)' "$msg_file" > "$tmp"
+mv "$tmp" "$msg_file"
