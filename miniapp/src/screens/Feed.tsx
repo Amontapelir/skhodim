@@ -6,6 +6,8 @@ import { TimeFilter, type TimeRange } from "../components/TimeFilter";
 import { CategoryFilter } from "../components/CategoryFilter";
 import { AgeRatingFilter } from "../components/AgeRatingFilter";
 import { RecipientPickerModal } from "../components/RecipientPickerModal";
+import { ReturnByFilter, DEFAULT_RETURN_BY_STATE, type ReturnByState } from "../components/ReturnByFilter";
+import { fitsReturnBy } from "../travelEstimate";
 
 const EMPTY_TIME_RANGE: TimeRange = {};
 
@@ -20,6 +22,7 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sendingEvent, setSendingEvent] = useState<EventDto | null>(null);
+  const [returnBy, setReturnBy] = useState<ReturnByState>(DEFAULT_RETURN_BY_STATE);
 
   useEffect(() => {
     setLoading(true);
@@ -48,13 +51,20 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   }
 
   const hasTimeFilter = timeRange.afterHour !== undefined || timeRange.beforeHour !== undefined;
-  const activeFilterCount = (categories.length > 0 ? 1 : 0) + (hasTimeFilter ? 1 : 0) + (ratings.length > 0 ? 1 : 0);
+  const activeFilterCount =
+    (categories.length > 0 ? 1 : 0) + (hasTimeFilter ? 1 : 0) + (ratings.length > 0 ? 1 : 0) + (returnBy.enabled ? 1 : 0);
 
   function resetFilters() {
     setCategories([]);
     setTimeRange(EMPTY_TIME_RANGE);
     setRatings([]);
+    setReturnBy(DEFAULT_RETURN_BY_STATE);
   }
+
+  const visibleEvents =
+    returnBy.enabled && returnBy.home
+      ? events.filter((e) => fitsReturnBy(e, { home: returnBy.home!, returnByTime: returnBy.returnByTime }))
+      : events;
 
   return (
     <div>
@@ -88,6 +98,10 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
             <span className="filter-group-label">Возрастной ценз</span>
             <AgeRatingFilter value={ratings} onChange={setRatings} />
           </div>
+          <div className="filter-group">
+            <span className="filter-group-label">Дорога туда и обратно</span>
+            <ReturnByFilter value={returnBy} onChange={setReturnBy} />
+          </div>
           {activeFilterCount > 0 && (
             <button className="filters-reset" onClick={resetFilters}>
               Сбросить фильтры
@@ -104,16 +118,22 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
 
       {error && <div className="empty-state">Ошибка загрузки: {error}</div>}
       {loading && <div className="empty-state">Загрузка…</div>}
-      {!loading && !error && events.length === 0 && <div className="empty-state">Событий не найдено.</div>}
+      {!loading && !error && visibleEvents.length === 0 && (
+        <div className="empty-state">
+          {returnBy.enabled && events.length > 0
+            ? "Ни на одно событие вы не успеете съездить и вернуться в срок."
+            : "Событий не найдено."}
+        </div>
+      )}
 
-      {!loading && !error && events.length > 0 && view === "map" && (
-        <EventMap events={events} onSend={handleSend} onBuy={handleBuy} onBought={handleBought} />
+      {!loading && !error && visibleEvents.length > 0 && view === "map" && (
+        <EventMap events={visibleEvents} onSend={handleSend} onBuy={handleBuy} onBought={handleBought} />
       )}
 
       {!loading &&
         !error &&
         view === "list" &&
-        events.map((event) => (
+        visibleEvents.map((event) => (
           <EventCard
             key={event.id}
             event={event}

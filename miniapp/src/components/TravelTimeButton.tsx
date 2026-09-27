@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { isTravelTimeAvailable, travelTimeTo, type TravelTime } from "../yandexMaps";
+import { isYandexMapsAvailable, travelTimeTo, type TravelTime } from "../yandexMaps";
 
 /** Renders nothing when no Yandex Maps API key is configured. */
 export function TravelTimeButton({ destination }: { destination: [number, number] }) {
@@ -7,7 +7,7 @@ export function TravelTimeButton({ destination }: { destination: [number, number
     status: "idle",
   });
 
-  if (!isTravelTimeAvailable()) return null;
+  if (!isYandexMapsAvailable()) return null;
 
   async function handleClick() {
     setState({ status: "loading" });

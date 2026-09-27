@@ -1,3 +1,12 @@
+interface YmapsPlacemark {
+  events: { add(event: string, handler: () => void): void };
+}
+
+interface YmapsMap {
+  destroy(): void;
+  geoObjects: { add(obj: YmapsPlacemark): void; removeAll(): void };
+}
+
 declare global {
   interface Window {
     ymaps?: {
@@ -6,19 +15,32 @@ declare global {
         points: Array<[number, number]>,
         options?: Record<string, unknown>
       ): Promise<{ getHumanTime(): string; getHumanLength(): string }>;
+      Map: new (
+        container: HTMLElement,
+        state: { center: [number, number]; zoom: number; controls?: string[] }
+      ) => YmapsMap;
+      Placemark: new (
+        coordinates: [number, number],
+        properties: Record<string, unknown>,
+        options: Record<string, unknown>
+      ) => YmapsPlacemark;
+      templateLayoutFactory: { createClass(template: string): unknown };
     };
   }
 }
 
 const API_KEY = import.meta.env.VITE_YANDEX_MAPS_API_KEY as string | undefined;
 
-export function isTravelTimeAvailable(): boolean {
+export function isYandexMapsAvailable(): boolean {
   return !!API_KEY && !API_KEY.startsWith("[");
 }
 
+/** @deprecated use isYandexMapsAvailable */
+export const isTravelTimeAvailable = isYandexMapsAvailable;
+
 let loadPromise: Promise<void> | null = null;
 
-function loadYandexMapsScript(): Promise<void> {
+export function loadYandexMaps(): Promise<void> {
   if (loadPromise) return loadPromise;
   loadPromise = new Promise((resolve, reject) => {
     const script = document.createElement("script");
@@ -53,11 +75,11 @@ export interface TravelTime {
 
 /** Route duration/distance from the user's current location to a venue, via Yandex Maps. */
 export async function travelTimeTo(destination: [number, number]): Promise<TravelTime> {
-  if (!isTravelTimeAvailable()) {
+  if (!isYandexMapsAvailable()) {
     throw new Error("Ключ Яндекс.Карт не настроен (VITE_YANDEX_MAPS_API_KEY)");
   }
   const origin = await getUserLocation();
-  await loadYandexMapsScript();
+  await loadYandexMaps();
   const route = await window.ymaps!.route([origin, destination]);
   return { humanTime: route.getHumanTime(), humanLength: route.getHumanLength() };
 }
