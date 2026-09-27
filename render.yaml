@@ -27,7 +27,6 @@ services:
   - type: web
     runtime: static
     name: skhodim-miniapp
-    plan: free
     rootDir: miniapp
     buildCommand: npm install && npm run build
     staticPublishPath: dist
