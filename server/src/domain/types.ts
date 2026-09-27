@@ -27,6 +27,7 @@ export interface Event {
   source: "test" | "proculture";
   title: string;
   normalizedTitle: string;
+  description: string | null;
   venueId: string;
   category: EventCategory;
   minAge: number;

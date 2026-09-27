@@ -16,22 +16,6 @@ async function upsertVenue(raw: RawEvent["venue"]): Promise<string> {
 }
 
 async function main() {
-  const existingCount = await db("events").count<{ count: string }[]>("id as count").first();
-  if (Number(existingCount?.count ?? 0) > 0) {
-    console.log("Events already seeded, skipping (run with --force to reseed).");
-    if (!process.argv.includes("--force")) {
-      await db.destroy();
-      return;
-    }
-    // --force: wipe and reseed from scratch. This also deletes invites
-    // (they reference events via a foreign key) — never do this against a
-    // database with real user invites, only for local dev resets.
-    await db("invite_responses").del();
-    await db("invites").del();
-    await db("events").del();
-    await db("venues").del();
-  }
-
   const source =
     config.eventSource === "proculture"
       ? new ProCultureSource()
@@ -46,6 +30,10 @@ async function main() {
   );
   console.log(`After dedup: ${deduped.length} events (removed ${raw.length - deduped.length})`);
 
+  // Upserts by (source, external_id): existing events get their mutable
+  // fields (price, description, etc.) refreshed in place, nothing is
+  // deleted, so this is safe to run on every boot without touching venues
+  // or any invites already created against these events.
   for (const event of deduped) {
     const venueId = await upsertVenue(event.venue);
     await db("events")
@@ -54,6 +42,7 @@ async function main() {
         source: event.source,
         title: event.title,
         normalized_title: normalizeTitle(event.title),
+        description: event.description,
         venue_id: venueId,
         category: event.category,
         min_age: event.minAge,
@@ -62,7 +51,7 @@ async function main() {
         purchase_url: event.purchaseUrl,
       })
       .onConflict(["source", "external_id"])
-      .ignore();
+      .merge(["title", "normalized_title", "description", "venue_id", "category", "min_age", "price", "starts_at", "purchase_url"]);
   }
 
   console.log("Seed complete.");

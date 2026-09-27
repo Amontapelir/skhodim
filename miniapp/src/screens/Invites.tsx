@@ -34,6 +34,7 @@ function InviteCard({
       <p className="card-meta">
         {new Date(invite.event.startsAt).toLocaleString("ru-RU")} · {invite.event.price} ₽
       </p>
+      {invite.event.description && <p className="card-description">{invite.event.description}</p>}
       <div className="card-actions">
         <button className="btn btn-going" onClick={() => onRespond("going")}>
           Иду
@@ -43,6 +44,9 @@ function InviteCard({
         </button>
         <button className="btn btn-secondary" onClick={() => onRespond("propose_other_date")}>
           Предложить другую дату
+        </button>
+        <button className="btn btn-secondary" onClick={() => window.open(invite.event.purchaseUrl, "_blank")}>
+          Сайт события
         </button>
       </div>
       <div className="status-line">

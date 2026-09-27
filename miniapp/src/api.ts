@@ -3,6 +3,7 @@ export type AgeGroup = "14-15" | "16-17" | "18-22";
 export interface EventDto {
   id: string;
   title: string;
+  description: string | null;
   category: string;
   minAge: number;
   price: number;

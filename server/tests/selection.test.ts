@@ -9,6 +9,7 @@ function makeEvent(overrides: Partial<Event>): Event {
     source: "test",
     title: "Событие",
     normalizedTitle: "событие",
+    description: null,
     venueId: "v1",
     category: "theatre",
     minAge: 0,

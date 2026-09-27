@@ -8,6 +8,7 @@ export function eventRowToDomain(row: any): Event {
     source: row.source,
     title: row.title,
     normalizedTitle: row.normalized_title ?? normalizeTitle(row.title),
+    description: row.description ?? null,
     venueId: row.venue_id,
     category: row.category as EventCategory,
     minAge: row.min_age,

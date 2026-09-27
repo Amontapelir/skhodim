@@ -64,6 +64,7 @@ export function EventMap({
                   <p className="map-popup-meta">
                     {event.venue.name} · {formatDate(event.startsAt)} · {event.price} ₽
                   </p>
+                  {event.description && <p className="map-popup-description">{event.description}</p>}
                   <div className="map-popup-actions">
                     <button className="btn btn-secondary btn-sm" onClick={() => onSend(event.id)}>
                       Отправить

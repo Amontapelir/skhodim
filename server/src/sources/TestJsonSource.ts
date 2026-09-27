@@ -8,6 +8,7 @@ interface TestJsonFile {
     externalId: string;
     source: string;
     title: string;
+    description: string | null;
     venue: { name: string; address: string; lat: number; lon: number };
     category: string;
     minAge: number;

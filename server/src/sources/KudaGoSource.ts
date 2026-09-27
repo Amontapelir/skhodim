@@ -17,12 +17,18 @@ interface KudaGoPlace {
 interface KudaGoEvent {
   id: number;
   title: string;
+  description: string;
   place?: KudaGoPlace;
   price: string;
   age_restriction: string;
   dates: Array<{ start: number; end: number }>;
   categories: string[];
   site_url: string;
+}
+
+function stripHtml(html: string): string | null {
+  const text = html.replace(/<[^>]+>/g, "").trim();
+  return text.length > 0 ? text : null;
 }
 
 function mapCategory(categories: string[]): string {
@@ -48,7 +54,7 @@ export class KudaGoSource implements EventSource {
   async fetchEvents(): Promise<RawEvent[]> {
     const url = new URL(KUDAGO_BASE_URL);
     url.searchParams.set("location", MOSCOW_LOCATION_SLUG);
-    url.searchParams.set("fields", "id,title,place,price,age_restriction,dates,categories,site_url");
+    url.searchParams.set("fields", "id,title,description,place,price,age_restriction,dates,categories,site_url");
     url.searchParams.set("expand", "place");
     url.searchParams.set("page_size", "100");
     url.searchParams.set("actual_since", String(Math.floor(Date.now() / 1000)));
@@ -67,6 +73,7 @@ export class KudaGoSource implements EventSource {
         externalId: String(ev.id),
         source: "kudago" as RawEvent["source"],
         title: ev.title,
+        description: ev.description ? stripHtml(ev.description) : null,
         venue: {
           name: ev.place.title,
           address: ev.place.address,

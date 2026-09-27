@@ -18,18 +18,78 @@ const venues = [
 ];
 
 const titles = [
-  { title: "Евгений Онегин", category: "theatre", minAge: 12 },
-  { title: "Чайка", category: "theatre", minAge: 14 },
-  { title: "Иван Васильевич меняет профессию", category: "cinema", minAge: 0 },
-  { title: "Дюна: Пророчество", category: "cinema", minAge: 16 },
-  { title: "Симфония №9", category: "concert", minAge: 6 },
-  { title: "Ночь джаза", category: "concert", minAge: 12 },
-  { title: "Импрессионисты", category: "exhibition", minAge: 0 },
-  { title: "Космос и мы", category: "exhibition", minAge: 6 },
-  { title: "Щелкунчик", category: "theatre", minAge: 6 },
-  { title: "Стендап-вечер", category: "concert", minAge: 18 },
-  { title: "Гарри Поттер и философский камень", category: "cinema", minAge: 6 },
-  { title: "Русский авангард", category: "museum", minAge: 12 },
+  {
+    title: "Евгений Онегин",
+    category: "theatre",
+    minAge: 12,
+    description: "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
+  },
+  {
+    title: "Чайка",
+    category: "theatre",
+    minAge: 14,
+    description: "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+  },
+  {
+    title: "Иван Васильевич меняет профессию",
+    category: "cinema",
+    minAge: 0,
+    description: "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
+  },
+  {
+    title: "Дюна: Пророчество",
+    category: "cinema",
+    minAge: 16,
+    description: "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
+  },
+  {
+    title: "Симфония №9",
+    category: "concert",
+    minAge: 6,
+    description: "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+  },
+  {
+    title: "Ночь джаза",
+    category: "concert",
+    minAge: 12,
+    description: "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
+  },
+  {
+    title: "Импрессионисты",
+    category: "exhibition",
+    minAge: 0,
+    description: "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
+  },
+  {
+    title: "Космос и мы",
+    category: "exhibition",
+    minAge: 6,
+    description: "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
+  },
+  {
+    title: "Щелкунчик",
+    category: "theatre",
+    minAge: 6,
+    description: "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+  },
+  {
+    title: "Стендап-вечер",
+    category: "concert",
+    minAge: 18,
+    description: "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+  },
+  {
+    title: "Гарри Поттер и философский камень",
+    category: "cinema",
+    minAge: 6,
+    description: "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+  },
+  {
+    title: "Русский авангард",
+    category: "museum",
+    minAge: 12,
+    description: "Экспозиция живописи и графики русских авангардистов начала XX века.",
+  },
 ];
 
 const sources = ["test", "test-mirror"] as const;
@@ -59,6 +119,7 @@ for (let i = 0; i < 70; i++) {
     externalId,
     source: "test",
     title: t.title,
+    description: t.description,
     venue,
     category: t.category,
     minAge: t.minAge,
@@ -75,6 +136,7 @@ for (let i = 0; i < 70; i++) {
       externalId: dupExternalId,
       source: "test-mirror",
       title: t.title + (Math.random() < 0.5 ? "!" : ""),
+      description: t.description,
       venue,
       category: t.category,
       minAge: t.minAge,

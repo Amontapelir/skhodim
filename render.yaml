@@ -11,10 +11,11 @@ services:
     plan: free
     rootDir: server
     buildCommand: npm install
-    # migrate и seed идемпотентны (seed пропускает пересев, если events уже
-    # заполнены — см. server/src/db/seed.ts), seed-dev-users.ts тоже не
-    # плодит дубли. Безопасно запускать при каждом старте, в том числе после
-    # пробуждения бесплатного инстанса из сна.
+    # migrate и seed идемпотентны: seed обновляет существующие события через
+    # upsert по (source, external_id), ничего не удаляет — см.
+    # server/src/db/seed.ts. seed-dev-users.ts тоже не плодит дубли. Безопасно
+    # запускать при каждом старте, в том числе после пробуждения бесплатного
+    # инстанса из сна.
     startCommand: npm run migrate && npm run seed && npx tsx scripts/seed-dev-users.ts && npm run start
     envVars:
       - key: DATABASE_URL

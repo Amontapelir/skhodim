@@ -34,6 +34,7 @@ export function EventCard({
       <p className="card-meta">
         {formatDate(event.startsAt)} · с {event.minAge || 0}+
       </p>
+      {event.description && <p className="card-description">{event.description}</p>}
       <div className="card-actions">
         <button className="btn btn-secondary" onClick={onSend}>
           Отправить
