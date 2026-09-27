@@ -16,6 +16,22 @@ async function upsertVenue(raw: RawEvent["venue"]): Promise<string> {
 }
 
 async function main() {
+  const existingCount = await db("events").count<{ count: string }[]>("id as count").first();
+  if (Number(existingCount?.count ?? 0) > 0) {
+    console.log("Events already seeded, skipping (run with --force to reseed).");
+    if (!process.argv.includes("--force")) {
+      await db.destroy();
+      return;
+    }
+    // --force: wipe and reseed from scratch. This also deletes invites
+    // (they reference events via a foreign key) — never do this against a
+    // database with real user invites, only for local dev resets.
+    await db("invite_responses").del();
+    await db("invites").del();
+    await db("events").del();
+    await db("venues").del();
+  }
+
   const source =
     config.eventSource === "proculture"
       ? new ProCultureSource()
@@ -29,11 +45,6 @@ async function main() {
     raw.map((e) => ({ ...e, venue: e.venue, startsAt: e.startsAt }))
   );
   console.log(`After dedup: ${deduped.length} events (removed ${raw.length - deduped.length})`);
-
-  await db("invite_responses").del();
-  await db("invites").del();
-  await db("events").del();
-  await db("venues").del();
 
   for (const event of deduped) {
     const venueId = await upsertVenue(event.venue);

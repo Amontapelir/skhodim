@@ -29,16 +29,25 @@ async function main() {
   const sender = await db("users").where({ max_user_id: "dev-user-2" }).first();
   const recipient = await db("users").where({ max_user_id: "dev-user-1" }).first();
 
-  const [invite] = await db("invites")
-    .insert({ event_id: event.id, from_user_id: sender.id })
-    .returning("*");
+  const existingInvite = await db("invites")
+    .where({ event_id: event.id, from_user_id: sender.id })
+    .first();
 
-  await db("invite_responses").insert([
-    { invite_id: invite.id, user_id: recipient.id, status: "pending" },
-    { invite_id: invite.id, user_id: sender.id, status: "going" },
-  ]);
+  if (existingInvite) {
+    console.log("Dev users and sample invite already exist, nothing to do.");
+  } else {
+    const [invite] = await db("invites")
+      .insert({ event_id: event.id, from_user_id: sender.id })
+      .returning("*");
 
-  console.log(`Seeded dev-user-1, dev-user-2, and an invite for event "${event.title}" (${event.id}).`);
+    await db("invite_responses").insert([
+      { invite_id: invite.id, user_id: recipient.id, status: "pending" },
+      { invite_id: invite.id, user_id: sender.id, status: "going" },
+    ]);
+
+    console.log(`Seeded dev-user-1, dev-user-2, and an invite for event "${event.title}" (${event.id}).`);
+  }
+
   await db.destroy();
 }
 
