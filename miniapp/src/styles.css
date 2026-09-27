@@ -375,9 +375,41 @@ body {
   transform: rotate(45deg);
 }
 
+.user-location-marker {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #2f6fed;
+  border: 3px solid #fdf6ec;
+  box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.3);
+}
+
+.user-location-marker::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: rgba(47, 111, 237, 0.35);
+  animation: user-location-pulse 1.8s ease-out infinite;
+}
+
+@keyframes user-location-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
 .map-popup {
   min-width: 200px;
+  padding: 14px 16px;
   font-family: "Inter", sans-serif;
+  background: var(--surface);
 }
 
 .map-popup-title {
@@ -399,13 +431,29 @@ body {
   flex-wrap: wrap;
 }
 
-.ymaps-2-1-79-balloon,
-.ymaps-2-1-79-balloon__layout {
-  border-radius: var(--radius-sm) !important;
+/* Yandex Maps class names are versioned (ymaps-2-1-NN-…) and the build number
+   isn't guaranteed to match what we hardcode, so target them with wildcards. */
+div[class*="-balloon__layout"] {
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  border: 1px solid var(--border) !important;
+  overflow: hidden !important;
 }
 
-.ymaps-2-1-79-balloon__content {
-  padding: 4px !important;
+div[class*="-balloon__content"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 260px !important;
+}
+
+div[class*="-balloon__tail"] {
+  display: none !important;
+}
+
+div[class*="-balloon__close-button"] {
+  top: 10px !important;
+  right: 10px !important;
+  opacity: 0.5;
 }
 
 .affordability-tag {

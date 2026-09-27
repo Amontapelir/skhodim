@@ -42,11 +42,13 @@ function escapeHtml(s: string): string {
 
 export function EventMap({
   events,
+  userLocation = null,
   onSend,
   onBuy,
   onBought,
 }: {
   events: EventDto[];
+  userLocation?: [number, number] | null;
   onSend: (id: string) => void;
   onBuy: (event: EventDto) => void;
   onBought: (id: string) => void;
@@ -55,7 +57,9 @@ export function EventMap({
   const mapRef = useRef<InstanceType<NonNullable<Window["ymaps"]>["Map"]> | null>(null);
   const eventsRef = useRef<EventDto[]>(events);
   const eventsByIdRef = useRef<Map<string, EventDto>>(new Map());
+  const userLocationRef = useRef<[number, number] | null>(userLocation);
   eventsRef.current = events;
+  userLocationRef.current = userLocation;
 
   function renderPlacemarks() {
     const map = mapRef.current;
@@ -100,6 +104,16 @@ export function EventMap({
       );
       map.geoObjects.add(placemark);
     }
+
+    if (userLocationRef.current) {
+      const userMarker = new ymaps.Placemark(userLocationRef.current, {}, {
+        iconLayout: ymaps.templateLayoutFactory.createClass('<div class="user-location-marker"></div>'),
+        iconShape: { type: "Circle", coordinates: [0, 0], radius: 8 },
+        iconOffset: [-8, -8],
+        zIndex: 1000,
+      });
+      map.geoObjects.add(userMarker);
+    }
   }
 
   // Create the map once and destroy it on unmount.
@@ -125,11 +139,11 @@ export function EventMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Refresh pins whenever the filtered event list changes.
+  // Refresh pins whenever the filtered event list or user location changes.
   useEffect(() => {
     if (mapRef.current) renderPlacemarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events]);
+  }, [events, userLocation]);
 
   // Delegate clicks on balloon action buttons (raw HTML, not React elements).
   useEffect(() => {

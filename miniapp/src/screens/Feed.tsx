@@ -127,7 +127,13 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
       )}
 
       {!loading && !error && visibleEvents.length > 0 && view === "map" && (
-        <EventMap events={visibleEvents} onSend={handleSend} onBuy={handleBuy} onBought={handleBought} />
+        <EventMap
+          events={visibleEvents}
+          userLocation={returnBy.enabled ? returnBy.home : null}
+          onSend={handleSend}
+          onBuy={handleBuy}
+          onBought={handleBought}
+        />
       )}
 
       {!loading &&
