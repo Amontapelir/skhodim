@@ -55,12 +55,19 @@ function InviteCard({
 export function Invites({ maxUserId }: { maxUserId: string }) {
   const [invites, setInvites] = useState<InviteListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   async function reload() {
     setLoading(true);
-    const data = await fetchIncomingInvites(maxUserId);
-    setInvites(data);
-    setLoading(false);
+    setError(null);
+    try {
+      const data = await fetchIncomingInvites(maxUserId);
+      setInvites(data);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -79,6 +86,7 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
   }
 
   if (loading) return <div className="empty-state">Загрузка…</div>;
+  if (error) return <div className="empty-state">Ошибка загрузки: {error}</div>;
   if (invites.length === 0) return <div className="empty-state">Пока никто не позвал.</div>;
 
   return (
