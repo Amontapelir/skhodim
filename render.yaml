@@ -1,0 +1,42 @@
+databases:
+  - name: skhodim-db
+    plan: free
+    databaseName: skhodim
+    user: skhodim
+
+services:
+  - type: web
+    name: skhodim-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm run migrate && npm run seed && npm run start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: skhodim-db
+          property: connectionString
+      - key: EVENT_SOURCE
+        value: test
+      - key: BOT_ADAPTER
+        value: mock
+      - key: CORS_ORIGIN
+        value: "*"
+
+  - type: web
+    runtime: static
+    name: skhodim-miniapp
+    plan: free
+    rootDir: miniapp
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      # После первого деплоя backend’а подставьте сюда реальный URL
+      # (https://skhodim-server.onrender.com) и передеплойте static site —
+      # Render Blueprint не умеет линковать полный URL веб-сервиса в build-time
+      # переменную другого сервиса автоматически.
+      - key: VITE_API_BASE_URL
+        sync: false
+      - key: VITE_YANDEX_MAPS_API_KEY
+        sync: false
