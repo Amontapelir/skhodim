@@ -23,7 +23,7 @@ services:
           name: skhodim-db
           property: connectionString
       - key: EVENT_SOURCE
-        value: test
+        value: kudago
       - key: BOT_ADAPTER
         value: mock
       - key: CORS_ORIGIN

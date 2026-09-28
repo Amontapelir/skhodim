@@ -1,4 +1,5 @@
 import { dedupEvents, normalizeTitle } from "../domain/dedup";
+import { nearestDistrict } from "../domain/districts";
 import { db } from "./knex";
 import { TestJsonSource } from "../sources/TestJsonSource";
 import { ProCultureSource } from "../sources/ProCultureSource";
@@ -7,23 +8,47 @@ import { config } from "../config";
 import type { RawEvent } from "../sources/EventSource";
 
 async function upsertVenue(raw: RawEvent["venue"]): Promise<string> {
+  const district = nearestDistrict(raw.lat, raw.lon);
   const existing = await db("venues").where({ name: raw.name, address: raw.address }).first();
-  if (existing) return existing.id;
+  if (existing) {
+    // Backfills district on venues seeded before this field existed, without
+    // touching anything else about the row (events/invites reference it by id).
+    if (!existing.district) await db("venues").where({ id: existing.id }).update({ district });
+    return existing.id;
+  }
   const [row] = await db("venues")
-    .insert({ name: raw.name, address: raw.address, lat: raw.lat, lon: raw.lon })
+    .insert({ name: raw.name, address: raw.address, lat: raw.lat, lon: raw.lon, district })
     .returning("id");
   return row.id;
 }
 
-async function main() {
+async function fetchWithFallback(): Promise<{ raw: RawEvent[]; sourceName: string }> {
   const source =
     config.eventSource === "proculture"
       ? new ProCultureSource()
       : config.eventSource === "kudago"
         ? new KudaGoSource()
         : new TestJsonSource();
-  const raw = await source.fetchEvents();
-  console.log(`Fetched ${raw.length} raw events from ${config.eventSource}`);
+
+  if (config.eventSource === "test") {
+    return { raw: await source.fetchEvents(), sourceName: "test" };
+  }
+
+  // A live source (KudaGo, PRO.Культура) can be briefly unreachable, and seed
+  // runs on every server boot (including Render free-tier wake-from-sleep) —
+  // if it throws, the whole startCommand chain fails and the server never
+  // starts. Fall back to the bundled test data instead of crashing the boot.
+  try {
+    return { raw: await source.fetchEvents(), sourceName: config.eventSource };
+  } catch (err) {
+    console.error(`${config.eventSource} fetchEvents failed, falling back to test data:`, err);
+    return { raw: await new TestJsonSource().fetchEvents(), sourceName: "test (fallback)" };
+  }
+}
+
+async function main() {
+  const { raw, sourceName } = await fetchWithFallback();
+  console.log(`Fetched ${raw.length} raw events from ${sourceName}`);
 
   const deduped = dedupEvents(
     raw.map((e) => ({ ...e, venue: e.venue, startsAt: e.startsAt }))
