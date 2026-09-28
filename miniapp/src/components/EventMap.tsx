@@ -98,7 +98,9 @@ export function EventMap({
         { balloonContent: balloonHtml },
         {
           iconLayout: ymaps.templateLayoutFactory.createClass(pinHtml),
-          iconShape: { type: "Rectangle", coordinates: [[-17, -34], [17, 0]] },
+          // Padded beyond the 34x34 visual pin so the whole teardrop (including its
+          // narrow bottom tip) is an easy, forgiving tap target, not just its exact pixels.
+          iconShape: { type: "Rectangle", coordinates: [[-24, -40], [24, 8]] },
           iconOffset: [-17, -34],
         }
       );
