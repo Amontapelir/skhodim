@@ -21,8 +21,13 @@ function pinColor(category: string): string {
   return MAP_PIN_COLORS[category] ?? MAP_PIN_COLORS.other;
 }
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString("ru-RU", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+function ticketDate(iso: string): { day: string; month: string; time: string } {
+  const d = new Date(iso);
+  return {
+    day: d.toLocaleString("ru-RU", { day: "numeric" }),
+    month: d.toLocaleString("ru-RU", { month: "short" }).replace(".", ""),
+    time: d.toLocaleString("ru-RU", { hour: "2-digit", minute: "2-digit" }),
+  };
 }
 
 // Events sharing a venue get a small deterministic offset so their pins don't
@@ -40,20 +45,51 @@ function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => HTML_ESCAPES[c]);
 }
 
+/** Same ticket look as EventCard/InviteCard, hand-written as an HTML string
+ * because Yandex balloon layouts render raw HTML, not React. A custom
+ * balloonContentLayout (rather than the default balloonContent string) means
+ * we own sizing outright instead of fighting Yandex's own auto-measured
+ * balloon width — that mismatch was clipping long descriptions mid-word. */
+function ticketBalloonHtml(event: EventDto, actionsHtml: string): string {
+  const meta = categoryMeta(event.category);
+  const { day, month, time } = ticketDate(event.startsAt);
+  return `
+    <article class="ticket ticket-balloon" data-event-id="${event.id}" style="--cat:${meta.color}">
+      <div class="ticket-stub">
+        <div class="ticket-stamp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${meta.iconInner}</svg></div>
+        <div class="ticket-stub-label">${escapeHtml(meta.label)}</div>
+        <div class="ticket-stub-date"><span class="ticket-day">${day}</span><span class="ticket-month">${month}</span></div>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-top">
+          ${event.venue ? `<span class="ticket-venue">${escapeHtml(event.venue.name)}</span>` : "<span></span>"}
+          <span class="ticket-price">${event.price} ₽</span>
+        </div>
+        <p class="ticket-title">${escapeHtml(event.title)}</p>
+        <p class="ticket-meta">${time} · с ${event.minAge || 0}+</p>
+        ${event.description ? `<p class="card-description">${escapeHtml(event.description)}</p>` : ""}
+        <div class="ticket-actions">${actionsHtml}</div>
+        <div class="ticket-footer">
+          <span>БИЛЕТ № ${event.id.slice(0, 8).toUpperCase()}</span>
+          <span class="ticket-mark">Сходим?</span>
+        </div>
+      </div>
+    </article>`;
+}
+
 export function EventMap({
   events,
   userLocation = null,
   radiusCircle = null,
-  onSend,
-  onBuy,
-  onBought,
+  renderActions,
+  onAction,
 }: {
   events: EventDto[];
   userLocation?: [number, number] | null;
   radiusCircle?: { center: [number, number]; radiusKm: number } | null;
-  onSend: (id: string) => void;
-  onBuy: (event: EventDto) => void;
-  onBought: (id: string) => void;
+  /** HTML for the balloon's action buttons — give each a data-action attribute. */
+  renderActions: (event: EventDto) => string;
+  onAction: (eventId: string, action: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<InstanceType<NonNullable<Window["ymaps"]>["Map"]> | null>(null);
@@ -61,9 +97,11 @@ export function EventMap({
   const eventsByIdRef = useRef<Map<string, EventDto>>(new Map());
   const userLocationRef = useRef<[number, number] | null>(userLocation);
   const radiusCircleRef = useRef(radiusCircle);
+  const renderActionsRef = useRef(renderActions);
   eventsRef.current = events;
   userLocationRef.current = userLocation;
   radiusCircleRef.current = radiusCircle;
+  renderActionsRef.current = renderActions;
 
   function renderPlacemarks() {
     const map = mapRef.current;
@@ -84,28 +122,20 @@ export function EventMap({
       const [dLat, dLon] = jitter(event.id);
 
       const pinHtml = `<div class="map-pin" style="background:${color};box-shadow:0 4px 16px ${color}80"><svg class="map-pin-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${meta.iconInner}</svg></div>`;
-
-      const balloonHtml = `
-        <div class="map-popup">
-          <p class="map-popup-title" style="color:${color}">${escapeHtml(event.title)}</p>
-          <p class="map-popup-meta">${escapeHtml(event.venue.name)} · ${formatDate(event.startsAt)} · ${event.price} ₽</p>
-          ${event.description ? `<p class="map-popup-description">${escapeHtml(event.description)}</p>` : ""}
-          <div class="map-popup-actions">
-            <button class="btn btn-secondary btn-sm" data-action="send" data-event-id="${event.id}">Отправить</button>
-            <button class="btn btn-primary btn-sm" data-action="buy" data-event-id="${event.id}">Купить</button>
-            <button class="btn btn-secondary btn-sm" data-action="bought" data-event-id="${event.id}">Купил</button>
-          </div>
-        </div>`;
+      const balloonHtml = ticketBalloonHtml(event, renderActionsRef.current(event));
 
       const placemark = new ymaps.Placemark(
         [event.venue.lat + dLat, event.venue.lon + dLon],
-        { balloonContent: balloonHtml },
+        {},
         {
           iconLayout: ymaps.templateLayoutFactory.createClass(pinHtml),
           // Padded beyond the 34x34 visual pin so the whole teardrop (including its
           // narrow bottom tip) is an easy, forgiving tap target, not just its exact pixels.
           iconShape: { type: "Rectangle", coordinates: [[-24, -40], [24, 8]] },
           iconOffset: [-17, -34],
+          // A custom layout (not balloonContent) means Yandex sizes the balloon
+          // from our own rendered DOM instead of a mismatched internal default.
+          balloonContentLayout: ymaps.templateLayoutFactory.createClass(balloonHtml),
         }
       );
       map.geoObjects.add(placemark);
@@ -166,17 +196,13 @@ export function EventMap({
     if (!container) return;
     function handleClick(e: MouseEvent) {
       const target = (e.target as HTMLElement).closest("[data-action]") as HTMLElement | null;
-      if (!target) return;
-      const id = target.dataset.eventId;
-      const event = id ? eventsByIdRef.current.get(id) : undefined;
-      if (!event) return;
-      if (target.dataset.action === "send") onSend(event.id);
-      if (target.dataset.action === "buy") onBuy(event);
-      if (target.dataset.action === "bought") onBought(event.id);
+      if (!target?.dataset.action) return;
+      const eventId = target.closest<HTMLElement>("[data-event-id]")?.dataset.eventId;
+      if (eventId && eventsByIdRef.current.has(eventId)) onAction(eventId, target.dataset.action);
     }
     container.addEventListener("click", handleClick);
     return () => container.removeEventListener("click", handleClick);
-  }, [onSend, onBuy, onBought]);
+  }, [onAction]);
 
   if (!isYandexMapsAvailable()) {
     return (

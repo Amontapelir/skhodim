@@ -149,9 +149,19 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
           events={visibleEvents}
           userLocation={(returnBy.enabled && returnBy.home) || (radius.enabled && radius.center) || null}
           radiusCircle={radius.enabled && radius.center ? { center: radius.center, radiusKm: radius.radiusKm } : null}
-          onSend={handleSend}
-          onBuy={handleBuy}
-          onBought={handleBought}
+          renderActions={() => `
+            <button class="btn btn-secondary btn-sm" data-action="send">Отправить</button>
+            <button class="btn btn-primary btn-sm" data-action="buy">Купить</button>
+            <button class="btn btn-secondary btn-sm" data-action="bought">Купил</button>
+          `}
+          onAction={(eventId, action) => {
+            if (action === "send") handleSend(eventId);
+            if (action === "buy") {
+              const event = events.find((e) => e.id === eventId);
+              if (event) handleBuy(event);
+            }
+            if (action === "bought") handleBought(eventId);
+          }}
         />
       )}
 

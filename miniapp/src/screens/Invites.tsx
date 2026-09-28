@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { fetchIncomingInvites, respondToInvite, type InviteListItem } from "../api";
 import { categoryMeta } from "../categories";
 import { CategoryIcon } from "../components/CategoryIcon";
+import { EventMap } from "../components/EventMap";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Ожидает ответа",
@@ -79,6 +80,7 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
   const [invites, setInvites] = useState<InviteListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [view, setView] = useState<"list" | "map">("list");
 
   async function reload() {
     setLoading(true);
@@ -112,11 +114,49 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
   if (error) return <div className="empty-state">Ошибка загрузки: {error}</div>;
   if (invites.length === 0) return <div className="empty-state">Пока никто не позвал.</div>;
 
+  // Two invites can point at the same event (two friends called you to the
+  // same thing) — the map collapses them into one pin, so route an action to
+  // whichever invite got there first.
+  const inviteByEventId = new Map(invites.map((i) => [i.event.id, i]));
+
   return (
     <div>
-      {invites.map((invite) => (
-        <InviteCard key={invite.inviteId} invite={invite} onRespond={(status) => respond(invite.inviteId, status)} />
-      ))}
+      <div className="filters-bar">
+        <div className="view-switch">
+          <button className={`view-btn ${view === "list" ? "active" : ""}`} onClick={() => setView("list")}>
+            Список
+          </button>
+          <button className={`view-btn ${view === "map" ? "active" : ""}`} onClick={() => setView("map")}>
+            Карта
+          </button>
+        </div>
+      </div>
+
+      {view === "map" ? (
+        <EventMap
+          events={invites.map((i) => i.event)}
+          renderActions={(event) => {
+            const invite = inviteByEventId.get(event.id);
+            return `
+              <button class="btn btn-going btn-sm" data-action="going">Иду</button>
+              <button class="btn btn-cannot btn-sm" data-action="cannot">Не могу</button>
+              <button class="btn btn-secondary btn-sm" data-action="site">Сайт события</button>
+              ${invite && !invite.fitsBalance ? `<span class="return-by-error">не хватает ${invite.shortfall} ₽</span>` : ""}
+            `;
+          }}
+          onAction={(eventId, action) => {
+            const invite = inviteByEventId.get(eventId);
+            if (!invite) return;
+            if (action === "going") respond(invite.inviteId, "going");
+            if (action === "cannot") respond(invite.inviteId, "cannot");
+            if (action === "site") window.open(invite.event.purchaseUrl, "_blank");
+          }}
+        />
+      ) : (
+        invites.map((invite) => (
+          <InviteCard key={invite.inviteId} invite={invite} onRespond={(status) => respond(invite.inviteId, status)} />
+        ))
+      )}
     </div>
   );
 }

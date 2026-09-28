@@ -499,30 +499,13 @@ body {
   }
 }
 
-.map-popup {
-  min-width: 200px;
-  padding: 14px 16px;
-  font-family: "Inter", sans-serif;
-  background: var(--surface);
-}
-
-.map-popup-title {
-  font-family: "Fraunces", serif;
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0 0 4px;
-}
-
-.map-popup-meta {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin: 0 0 8px;
-}
-
-.map-popup-actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+/* The balloon's own visible card look now comes entirely from .ticket-balloon
+   (the same ticket component used in the list) — this shell just needs to
+   get out of the way and stop imposing its own auto-measured width, which
+   used to clip long descriptions mid-word. */
+.ticket-balloon {
+  width: 300px;
+  margin: 0;
 }
 
 /* Yandex Maps renders balloon internals as custom <ymaps> elements, not
@@ -531,15 +514,15 @@ body {
    number isn't guaranteed to match what we hardcode, so target by class
    substring only, no tag qualifier. */
 [class*="-balloon__layout"] {
-  border-radius: var(--radius-lg) !important;
-  box-shadow: var(--shadow-card) !important;
-  border: 1px solid var(--border) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 [class*="-balloon__content"] {
   padding: 0 !important;
   margin: 0 !important;
-  max-width: 260px !important;
+  max-width: none !important;
   overflow: visible !important;
 }
 
@@ -722,16 +705,6 @@ body {
   overflow: hidden;
 }
 
-.map-popup-description {
-  font-size: 12px;
-  line-height: 1.35;
-  color: var(--text);
-  margin: 0 0 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
 .return-by-filter {
   align-items: center;

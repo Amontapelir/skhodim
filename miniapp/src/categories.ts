@@ -23,12 +23,12 @@ const SPARKLE_ICON =
   '<path d="M12 3v5M12 16v5M3 12h5M16 12h5M6.3 6.3l3.5 3.5M14.2 14.2l3.5 3.5M17.7 6.3l-3.5 3.5M9.8 14.2l-3.5 3.5"/>';
 
 export const CATEGORY_META: Record<string, CategoryMeta> = {
-  cinema: { label: "Кино", color: "#b5533c", iconInner: FILM_ICON },
-  theatre: { label: "Театр", color: "#6e4b84", iconInner: MASK_ICON },
-  concert: { label: "Концерт", color: "#c08a28", iconInner: MUSIC_ICON },
-  museum: { label: "Музей", color: "#2f6f63", iconInner: LANDMARK_ICON },
-  exhibition: { label: "Выставка", color: "#3b5b7a", iconInner: FRAME_ICON },
-  other: { label: "Событие", color: "#7a6a58", iconInner: SPARKLE_ICON },
+  cinema: { label: "Кино", color: "#d6392c", iconInner: FILM_ICON },
+  theatre: { label: "Театр", color: "#8a3fc9", iconInner: MASK_ICON },
+  concert: { label: "Концерт", color: "#dd9518", iconInner: MUSIC_ICON },
+  museum: { label: "Музей", color: "#1f9d6c", iconInner: LANDMARK_ICON },
+  exhibition: { label: "Выставка", color: "#2f7fe0", iconInner: FRAME_ICON },
+  other: { label: "Событие", color: "#d1447e", iconInner: SPARKLE_ICON },
 };
 
 export function categoryMeta(category: string): CategoryMeta {
