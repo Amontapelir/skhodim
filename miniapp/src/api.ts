@@ -10,7 +10,7 @@ export interface EventDto {
   startsAt: string;
   purchaseUrl: string;
   venueId: string;
-  venue: { name: string; address: string; lat: number; lon: number } | null;
+  venue: { name: string; address: string; lat: number; lon: number; district: string | null } | null;
 }
 
 export interface EventsResponse {
@@ -51,6 +51,7 @@ export async function fetchEvents(params: {
   beforeHour?: number;
   categories?: string[];
   ratings?: number[];
+  districts?: string[];
 }): Promise<EventsResponse> {
   const q = new URLSearchParams({
     balance: String(params.balance),
@@ -61,6 +62,7 @@ export async function fetchEvents(params: {
   if (params.beforeHour !== undefined) q.set("beforeHour", String(params.beforeHour));
   if (params.categories && params.categories.length > 0) q.set("categories", params.categories.join(","));
   if (params.ratings && params.ratings.length > 0) q.set("ratings", params.ratings.join(","));
+  if (params.districts && params.districts.length > 0) q.set("districts", params.districts.join(","));
   const res = await fetch(`${BASE}/events?${q}`);
   if (!res.ok) throw new Error(`fetchEvents failed: ${res.status}`);
   return res.json();

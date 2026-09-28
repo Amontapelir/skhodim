@@ -5,6 +5,7 @@ import { EventMap } from "../components/EventMap";
 import { TimeFilter, type TimeRange } from "../components/TimeFilter";
 import { CategoryFilter } from "../components/CategoryFilter";
 import { AgeRatingFilter } from "../components/AgeRatingFilter";
+import { DistrictFilter } from "../components/DistrictFilter";
 import { RecipientPickerModal } from "../components/RecipientPickerModal";
 import { ReturnByFilter, DEFAULT_RETURN_BY_STATE, type ReturnByState } from "../components/ReturnByFilter";
 import { fitsReturnBy } from "../travelEstimate";
@@ -17,6 +18,7 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   const [timeRange, setTimeRange] = useState<TimeRange>({});
   const [categories, setCategories] = useState<string[]>([]);
   const [ratings, setRatings] = useState<number[]>([]);
+  const [districts, setDistricts] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [view, setView] = useState<"list" | "map">("list");
   const [loading, setLoading] = useState(true);
@@ -27,14 +29,14 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetchEvents({ ...profile, ...timeRange, categories, ratings })
+    fetchEvents({ ...profile, ...timeRange, categories, ratings, districts })
       .then((res) => {
         setEvents(res.events);
         setFallback(res.fallback);
       })
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
-  }, [profile, timeRange, categories, ratings]);
+  }, [profile, timeRange, categories, ratings, districts]);
 
   function handleSend(eventId: string) {
     const event = events.find((e) => e.id === eventId);
@@ -52,12 +54,17 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
 
   const hasTimeFilter = timeRange.afterHour !== undefined || timeRange.beforeHour !== undefined;
   const activeFilterCount =
-    (categories.length > 0 ? 1 : 0) + (hasTimeFilter ? 1 : 0) + (ratings.length > 0 ? 1 : 0) + (returnBy.enabled ? 1 : 0);
+    (categories.length > 0 ? 1 : 0) +
+    (hasTimeFilter ? 1 : 0) +
+    (ratings.length > 0 ? 1 : 0) +
+    (districts.length > 0 ? 1 : 0) +
+    (returnBy.enabled ? 1 : 0);
 
   function resetFilters() {
     setCategories([]);
     setTimeRange(EMPTY_TIME_RANGE);
     setRatings([]);
+    setDistricts([]);
     setReturnBy(DEFAULT_RETURN_BY_STATE);
   }
 
@@ -97,6 +104,10 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
           <div className="filter-group">
             <span className="filter-group-label">Возрастной ценз</span>
             <AgeRatingFilter value={ratings} onChange={setRatings} />
+          </div>
+          <div className="filter-group">
+            <span className="filter-group-label">Район</span>
+            <DistrictFilter selected={districts} onChange={setDistricts} />
           </div>
           <div className="filter-group">
             <span className="filter-group-label">Дорога туда и обратно</span>

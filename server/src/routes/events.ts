@@ -40,9 +40,12 @@ export function registerEventRoutes(app: FastifyInstance) {
     if (ratings && ratings.some((r) => !Number.isFinite(r) || r < 0)) {
       return reply.status(400).send({ error: "ratings must be a comma-separated list of non-negative numbers" });
     }
+    const districts = q.districts ? q.districts.split(",").filter(Boolean) : undefined;
 
     const rows = await db("events").select("*");
-    const events = rows.map(eventRowToDomain);
+    const venues = await db("venues").select("*");
+    const venueById = new Map(venues.map((v) => [v.id, v]));
+    const events = rows.map((row) => ({ ...eventRowToDomain(row), district: venueById.get(row.venue_id)?.district ?? null }));
 
     const result = selectEvents(events, {
       balance,
@@ -52,20 +55,17 @@ export function registerEventRoutes(app: FastifyInstance) {
       beforeHour,
       categories,
       ratings,
+      districts,
       fromDate: q.fromDate,
       toDate: q.toDate,
     });
-
-    const venueIds = [...new Set(result.events.map((e) => e.venueId))];
-    const venues = await db("venues").whereIn("id", venueIds);
-    const venueById = new Map(venues.map((v) => [v.id, v]));
 
     const eventsWithVenue = result.events.map((e) => {
       const venue = venueById.get(e.venueId);
       return {
         ...e,
         venue: venue
-          ? { name: venue.name, address: venue.address, lat: Number(venue.lat), lon: Number(venue.lon) }
+          ? { name: venue.name, address: venue.address, lat: Number(venue.lat), lon: Number(venue.lon), district: venue.district ?? null }
           : null,
       };
     });
