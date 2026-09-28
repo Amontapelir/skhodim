@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { fetchIncomingInvites, respondToInvite, type InviteListItem } from "../api";
 import { categoryMeta } from "../categories";
 import { CategoryIcon } from "../components/CategoryIcon";
@@ -10,6 +11,14 @@ const STATUS_LABELS: Record<string, string> = {
   propose_other_date: "Предлагает другую дату",
 };
 
+function ticketDate(iso: string): { day: string; month: string } {
+  const d = new Date(iso);
+  return {
+    day: d.toLocaleString("ru-RU", { day: "numeric" }),
+    month: d.toLocaleString("ru-RU", { month: "short" }).replace(".", ""),
+  };
+}
+
 function InviteCard({
   invite,
   onRespond,
@@ -18,41 +27,51 @@ function InviteCard({
   onRespond: (status: "going" | "cannot" | "propose_other_date") => void;
 }) {
   const meta = categoryMeta(invite.event.category);
+  const { day, month } = ticketDate(invite.event.startsAt);
 
   return (
-    <div className="card">
-      <div className="card-top">
-        <span className="category-badge" style={{ background: `${meta.color}17`, color: meta.color }}>
-          <CategoryIcon category={invite.event.category} size={13} /> {meta.label}
-        </span>
-        <span className={`affordability-tag ${invite.fitsBalance ? "fits" : "overbudget"}`}>
-          {invite.fitsBalance ? "влезает в остаток" : `не хватает ${invite.shortfall} ₽`}
-        </span>
+    <article className="ticket" style={{ "--cat": meta.color } as CSSProperties}>
+      <div className="ticket-stub">
+        <div className="ticket-stamp">
+          <CategoryIcon category={invite.event.category} size={17} color="currentColor" />
+        </div>
+        <div className="ticket-stub-label">{meta.label}</div>
+        <div className="ticket-stub-date">
+          <span className="ticket-day">{day}</span>
+          <span className="ticket-month">{month}</span>
+        </div>
       </div>
-      <p className="card-title">{invite.event.title}</p>
-      {invite.event.venue && <p className="card-venue">{invite.event.venue.name}</p>}
-      <p className="card-meta">
-        {new Date(invite.event.startsAt).toLocaleString("ru-RU")} · {invite.event.price} ₽
-      </p>
-      {invite.event.description && <p className="card-description">{invite.event.description}</p>}
-      <div className="card-actions">
-        <button className="btn btn-going" onClick={() => onRespond("going")}>
-          Иду
-        </button>
-        <button className="btn btn-cannot" onClick={() => onRespond("cannot")}>
-          Не могу
-        </button>
-        <button className="btn btn-secondary" onClick={() => onRespond("propose_other_date")}>
-          Предложить другую дату
-        </button>
-        <button className="btn btn-secondary" onClick={() => window.open(invite.event.purchaseUrl, "_blank")}>
-          Сайт события
-        </button>
+      <div className="ticket-body">
+        <div className="ticket-top">
+          {invite.event.venue && <span className="ticket-venue">{invite.event.venue.name}</span>}
+          <span className={`affordability-tag ${invite.fitsBalance ? "fits" : "overbudget"}`}>
+            {invite.fitsBalance ? "влезает в остаток" : `не хватает ${invite.shortfall} ₽`}
+          </span>
+        </div>
+        <p className="ticket-title">{invite.event.title}</p>
+        <p className="ticket-meta">
+          {new Date(invite.event.startsAt).toLocaleString("ru-RU")} · {invite.event.price} ₽
+        </p>
+        {invite.event.description && <p className="card-description">{invite.event.description}</p>}
+        <div className="ticket-actions">
+          <button className="btn btn-going" onClick={() => onRespond("going")}>
+            Иду
+          </button>
+          <button className="btn btn-cannot" onClick={() => onRespond("cannot")}>
+            Не могу
+          </button>
+          <button className="btn btn-secondary" onClick={() => onRespond("propose_other_date")}>
+            Предложить другую дату
+          </button>
+          <button className="btn btn-secondary" onClick={() => window.open(invite.event.purchaseUrl, "_blank")}>
+            Сайт события
+          </button>
+        </div>
+        <div className="status-line">
+          {invite.responses.map((r) => `${r.displayName ?? r.userMaxId}: ${STATUS_LABELS[r.status] ?? r.status}`).join(" · ")}
+        </div>
       </div>
-      <div className="status-line">
-        {invite.responses.map((r) => `${r.displayName ?? r.userMaxId}: ${STATUS_LABELS[r.status] ?? r.status}`).join(" · ")}
-      </div>
-    </div>
+    </article>
   );
 }
 

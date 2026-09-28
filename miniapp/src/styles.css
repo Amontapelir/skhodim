@@ -4,8 +4,8 @@
   --border: #ece1d3;
   --text: #2a201d;
   --text-muted: #8c7b70;
-  --primary: #7a2e3b;
-  --primary-dark: #4f1c25;
+  --primary: #8c1f42;
+  --primary-dark: #5c1330;
   --accent: #c9962e;
   --success: #3f7a5d;
   --danger: #b3453f;
@@ -226,62 +226,156 @@ body {
   color: #8a5f10;
 }
 
-.card {
-  margin: 0 14px 12px;
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
+/* ---------- event ticket card ---------- */
+
+.ticket {
+  --cat: var(--primary);
+  display: flex;
+  margin: 0 14px 16px;
   background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
-.card-top {
+.ticket-stub {
+  position: relative;
+  flex: 0 0 68px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 9px;
+  padding: 14px 0;
+  border-right: 2px dashed var(--cat);
 }
 
-.category-badge {
-  display: inline-flex;
+/* punched perforation notches where the tear line meets the card's own edge */
+.ticket-stub::before,
+.ticket-stub::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.ticket-stub::before { top: -9px; }
+.ticket-stub::after { bottom: -9px; }
+
+.ticket-stamp {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--cat);
+  color: var(--cat);
+  display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+  justify-content: center;
+  transform: rotate(-8deg);
 }
 
-.card-price {
+.ticket-stub-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cat);
+}
+
+.ticket-stub-date {
+  text-align: center;
+  line-height: 1.1;
+}
+
+.ticket-stub-date .ticket-day {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket-stub-date .ticket-month {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ticket-body {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px 12px;
+}
+
+.ticket-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.ticket-venue {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--cat);
+}
+
+.ticket-price {
   font-size: 14px;
   font-weight: 700;
   color: var(--text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.card-title {
+.ticket-title {
   font-family: "Fraunces", "Inter", serif;
   font-size: 19px;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 4px;
   letter-spacing: -0.01em;
 }
 
-.card-venue {
+.ticket-meta {
   font-size: 13px;
   color: var(--text-muted);
-  margin: 0 0 2px;
+  margin: 0 0 10px;
 }
 
-.card-meta {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin: 0 0 13px;
-}
-
-.card-actions {
+.ticket-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.ticket-footer {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket-footer .ticket-mark {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  color: var(--cat);
+  white-space: nowrap;
 }
 
 .btn {
@@ -326,9 +420,9 @@ body {
 .status-line {
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
 }
 
 .empty-state {
@@ -474,7 +568,7 @@ body {
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 999px;
-  margin-left: 8px;
+  white-space: nowrap;
 }
 
 .affordability-tag.fits {
