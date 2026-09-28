@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import type { EventDto } from "../api";
 import { categoryMeta } from "../categories";
-import { isYandexMapsAvailable, loadYandexMaps } from "../yandexMaps";
+import { getUserLocation, isYandexMapsAvailable, loadYandexMaps } from "../yandexMaps";
+import { estimateTravelMinutes, formatTravelMinutes } from "../travelEstimate";
 
 const MOSCOW_CENTER: [number, number] = [55.7558, 37.6173];
 
@@ -68,7 +69,7 @@ function ticketBalloonHtml(event: EventDto, actionsHtml: string): string {
         <p class="ticket-title">${escapeHtml(event.title)}</p>
         <p class="ticket-meta">${time} · с ${event.minAge || 0}+</p>
         ${event.description ? `<p class="card-description">${escapeHtml(event.description)}</p>` : ""}
-        <div class="ticket-actions">${actionsHtml}</div>
+        <div class="ticket-actions">${actionsHtml}${event.venue ? `<button class="btn btn-secondary btn-sm" data-action="traveltime">Время в пути</button>` : ""}</div>
         <div class="ticket-footer">
           <span>БИЛЕТ № ${event.id.slice(0, 8).toUpperCase()}</span>
           <span class="ticket-mark">Сходим?</span>
@@ -129,15 +130,21 @@ export function EventMap({
         {},
         {
           iconLayout: ymaps.templateLayoutFactory.createClass(pinHtml),
-          // Padded beyond the 34x34 visual pin so the whole teardrop (including its
-          // narrow bottom tip) is an easy, forgiving tap target, not just its exact pixels.
-          iconShape: { type: "Rectangle", coordinates: [[-24, -40], [24, 8]] },
+          // Padded well beyond the 34x34 visual pin — a forgiving tap target
+          // matters more on a real touchscreen than in mouse testing.
+          iconShape: { type: "Rectangle", coordinates: [[-30, -46], [30, 14]] },
           iconOffset: [-17, -34],
           // A custom layout (not balloonContent) means Yandex sizes the balloon
           // from our own rendered DOM instead of a mismatched internal default.
           balloonContentLayout: ymaps.templateLayoutFactory.createClass(balloonHtml),
         }
       );
+      // Belt-and-suspenders: open the balloon explicitly on click instead of
+      // relying only on Yandex's implicit default-click behavior, which was
+      // unreliable in testing for reasons that didn't reduce to a clear cause.
+      placemark.events.add("click", () => {
+        placemark.balloon.open();
+      });
       map.geoObjects.add(placemark);
     }
 
@@ -194,11 +201,30 @@ export function EventMap({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    async function handleTravelTime(button: HTMLButtonElement, event: EventDto) {
+      if (!event.venue) return;
+      button.textContent = "Считаем…";
+      button.disabled = true;
+      try {
+        const origin = await getUserLocation();
+        const minutes = estimateTravelMinutes(origin, [event.venue.lat, event.venue.lon]);
+        button.textContent = `🚗 ${formatTravelMinutes(minutes)}`;
+      } catch {
+        button.textContent = "Не вышло, ещё раз?";
+        button.disabled = false;
+      }
+    }
     function handleClick(e: MouseEvent) {
       const target = (e.target as HTMLElement).closest("[data-action]") as HTMLElement | null;
       if (!target?.dataset.action) return;
       const eventId = target.closest<HTMLElement>("[data-event-id]")?.dataset.eventId;
-      if (eventId && eventsByIdRef.current.has(eventId)) onAction(eventId, target.dataset.action);
+      const event = eventId ? eventsByIdRef.current.get(eventId) : undefined;
+      if (!event) return;
+      if (target.dataset.action === "traveltime") {
+        handleTravelTime(target as HTMLButtonElement, event);
+        return;
+      }
+      onAction(event.id, target.dataset.action);
     }
     container.addEventListener("click", handleClick);
     return () => container.removeEventListener("click", handleClick);

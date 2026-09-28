@@ -1,5 +1,6 @@
 interface YmapsPlacemark {
   events: { add(event: string, handler: () => void): void };
+  balloon: { open(): void; close(): void };
 }
 
 interface YmapsGeoObject {

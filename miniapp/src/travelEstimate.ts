@@ -43,6 +43,15 @@ export function estimateTravelMinutes(from: [number, number], to: [number, numbe
   return (distanceKm(from, to) / ASSUMED_SPEED_KMH) * 60;
 }
 
+/** "~24 мин" / "~1 ч 5 мин" — shared by the TravelTimeButton and the map balloon. */
+export function formatTravelMinutes(minutes: number): string {
+  const rounded = Math.round(minutes);
+  if (rounded < 60) return `~${rounded} мин`;
+  const h = Math.floor(rounded / 60);
+  const m = rounded % 60;
+  return m === 0 ? `~${h} ч` : `~${h} ч ${m} мин`;
+}
+
 export interface ReturnByCheck {
   home: [number, number];
   /** "HH:MM" — the same calendar day as the event's own start date. */

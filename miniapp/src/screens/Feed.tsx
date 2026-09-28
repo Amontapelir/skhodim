@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchEvents, markPurchased, type AgeGroup, type EventDto } from "../api";
 import { EventCard } from "../components/EventCard";
 import { EventMap } from "../components/EventMap";
@@ -60,6 +60,34 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
     (returnBy.enabled ? 1 : 0) +
     (radius.enabled ? 1 : 0);
 
+  const mapUserLocation = useMemo(
+    () => (returnBy.enabled && returnBy.home) || (radius.enabled && radius.center) || null,
+    [returnBy, radius]
+  );
+  const mapRadiusCircle = useMemo(
+    () => (radius.enabled && radius.center ? { center: radius.center, radiusKm: radius.radiusKm } : null),
+    [radius]
+  );
+  const renderMapActions = useCallback(
+    () => `
+      <button class="btn btn-secondary btn-sm" data-action="send">Отправить</button>
+      <button class="btn btn-primary btn-sm" data-action="buy">Купить</button>
+      <button class="btn btn-secondary btn-sm" data-action="bought">Купил</button>
+    `,
+    []
+  );
+  const handleMapAction = useCallback(
+    (eventId: string, action: string) => {
+      if (action === "send") handleSend(eventId);
+      if (action === "buy") {
+        const event = events.find((e) => e.id === eventId);
+        if (event) handleBuy(event);
+      }
+      if (action === "bought") handleBought(eventId);
+    },
+    [events]
+  );
+
   function resetFilters() {
     setCategories([]);
     setTimeRange(EMPTY_TIME_RANGE);
@@ -68,15 +96,23 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
     setRadius(DEFAULT_RADIUS_STATE);
   }
 
-  const visibleEvents = events
-    .filter((e) => !returnBy.enabled || !returnBy.home || fitsReturnBy(e, { home: returnBy.home, returnByTime: returnBy.returnByTime }))
-    .filter(
-      (e) =>
-        !radius.enabled ||
-        !radius.center ||
-        !e.venue ||
-        distanceKm(radius.center, [e.venue.lat, e.venue.lon]) <= radius.radiusKm
-    );
+  // Memoized so EventMap's placemark-rebuild effect only re-fires when the
+  // actual filtered set changes, not on every incidental re-render (Yandex's
+  // custom icon/balloon layouts don't get fully cleaned up by removeAll() on
+  // rapid rebuilds, which was silently piling up stale, unclickable pins).
+  const visibleEvents = useMemo(
+    () =>
+      events
+        .filter((e) => !returnBy.enabled || !returnBy.home || fitsReturnBy(e, { home: returnBy.home, returnByTime: returnBy.returnByTime }))
+        .filter(
+          (e) =>
+            !radius.enabled ||
+            !radius.center ||
+            !e.venue ||
+            distanceKm(radius.center, [e.venue.lat, e.venue.lon]) <= radius.radiusKm
+        ),
+    [events, returnBy, radius]
+  );
 
   return (
     <div>
@@ -147,21 +183,10 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
       {!loading && !error && visibleEvents.length > 0 && view === "map" && (
         <EventMap
           events={visibleEvents}
-          userLocation={(returnBy.enabled && returnBy.home) || (radius.enabled && radius.center) || null}
-          radiusCircle={radius.enabled && radius.center ? { center: radius.center, radiusKm: radius.radiusKm } : null}
-          renderActions={() => `
-            <button class="btn btn-secondary btn-sm" data-action="send">Отправить</button>
-            <button class="btn btn-primary btn-sm" data-action="buy">Купить</button>
-            <button class="btn btn-secondary btn-sm" data-action="bought">Купил</button>
-          `}
-          onAction={(eventId, action) => {
-            if (action === "send") handleSend(eventId);
-            if (action === "buy") {
-              const event = events.find((e) => e.id === eventId);
-              if (event) handleBuy(event);
-            }
-            if (action === "bought") handleBought(eventId);
-          }}
+          userLocation={mapUserLocation}
+          radiusCircle={mapRadiusCircle}
+          renderActions={renderMapActions}
+          onAction={handleMapAction}
         />
       )}
 

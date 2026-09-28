@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
-import { fetchIncomingInvites, respondToInvite, type InviteListItem } from "../api";
+import { fetchIncomingInvites, respondToInvite, type EventDto, type InviteListItem } from "../api";
 import { categoryMeta } from "../categories";
 import { CategoryIcon } from "../components/CategoryIcon";
 import { EventMap } from "../components/EventMap";
+import { TravelTimeButton } from "../components/TravelTimeButton";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Ожидает ответа",
@@ -67,6 +68,7 @@ function InviteCard({
           <button className="btn btn-secondary" onClick={() => window.open(invite.event.purchaseUrl, "_blank")}>
             Сайт события
           </button>
+          {invite.event.venue && <TravelTimeButton destination={[invite.event.venue.lat, invite.event.venue.lon]} />}
         </div>
         <div className="status-line">
           {invite.responses.map((r) => `${r.displayName ?? r.userMaxId}: ${STATUS_LABELS[r.status] ?? r.status}`).join(" · ")}
@@ -74,6 +76,52 @@ function InviteCard({
       </div>
     </article>
   );
+}
+
+function InvitesMap({
+  invites,
+  onRespond,
+}: {
+  invites: InviteListItem[];
+  onRespond: (inviteId: string, status: "going" | "cannot" | "propose_other_date") => void;
+}) {
+  // Two invites can point at the same event (two friends called you to the
+  // same thing) — the map collapses them into one pin, so route an action to
+  // whichever invite got there first.
+  const inviteByEventId = useMemo(() => new Map(invites.map((i) => [i.event.id, i])), [invites]);
+  // Memoized so EventMap's placemark-rebuild effect only fires when the
+  // invite list itself changes, not on every incidental re-render — a fresh
+  // array/function identity each render was making Yandex rebuild every
+  // placemark constantly, and its custom icon/balloon layouts don't get
+  // fully cleaned up by removeAll() on rapid rebuilds, silently piling up
+  // stale, unclickable pins.
+  const events = useMemo(() => invites.map((i) => i.event), [invites]);
+
+  const renderActions = useCallback(
+    (event: EventDto) => {
+      const invite = inviteByEventId.get(event.id);
+      return `
+        <button class="btn btn-going btn-sm" data-action="going">Иду</button>
+        <button class="btn btn-cannot btn-sm" data-action="cannot">Не могу</button>
+        <button class="btn btn-secondary btn-sm" data-action="site">Сайт события</button>
+        ${invite && !invite.fitsBalance ? `<span class="return-by-error">не хватает ${invite.shortfall} ₽</span>` : ""}
+      `;
+    },
+    [inviteByEventId]
+  );
+
+  const onAction = useCallback(
+    (eventId: string, action: string) => {
+      const invite = inviteByEventId.get(eventId);
+      if (!invite) return;
+      if (action === "going") onRespond(invite.inviteId, "going");
+      if (action === "cannot") onRespond(invite.inviteId, "cannot");
+      if (action === "site") window.open(invite.event.purchaseUrl, "_blank");
+    },
+    [inviteByEventId, onRespond]
+  );
+
+  return <EventMap events={events} renderActions={renderActions} onAction={onAction} />;
 }
 
 export function Invites({ maxUserId }: { maxUserId: string }) {
@@ -114,11 +162,6 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
   if (error) return <div className="empty-state">Ошибка загрузки: {error}</div>;
   if (invites.length === 0) return <div className="empty-state">Пока никто не позвал.</div>;
 
-  // Two invites can point at the same event (two friends called you to the
-  // same thing) — the map collapses them into one pin, so route an action to
-  // whichever invite got there first.
-  const inviteByEventId = new Map(invites.map((i) => [i.event.id, i]));
-
   return (
     <div>
       <div className="filters-bar">
@@ -133,25 +176,7 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
       </div>
 
       {view === "map" ? (
-        <EventMap
-          events={invites.map((i) => i.event)}
-          renderActions={(event) => {
-            const invite = inviteByEventId.get(event.id);
-            return `
-              <button class="btn btn-going btn-sm" data-action="going">Иду</button>
-              <button class="btn btn-cannot btn-sm" data-action="cannot">Не могу</button>
-              <button class="btn btn-secondary btn-sm" data-action="site">Сайт события</button>
-              ${invite && !invite.fitsBalance ? `<span class="return-by-error">не хватает ${invite.shortfall} ₽</span>` : ""}
-            `;
-          }}
-          onAction={(eventId, action) => {
-            const invite = inviteByEventId.get(eventId);
-            if (!invite) return;
-            if (action === "going") respond(invite.inviteId, "going");
-            if (action === "cannot") respond(invite.inviteId, "cannot");
-            if (action === "site") window.open(invite.event.purchaseUrl, "_blank");
-          }}
-        />
+        <InvitesMap invites={invites} onRespond={respond} />
       ) : (
         invites.map((invite) => (
           <InviteCard key={invite.inviteId} invite={invite} onRespond={(status) => respond(invite.inviteId, status)} />

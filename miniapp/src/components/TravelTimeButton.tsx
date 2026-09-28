@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { getUserLocation } from "../yandexMaps";
-import { estimateTravelMinutes } from "../travelEstimate";
-
-function formatMinutes(minutes: number): string {
-  const rounded = Math.round(minutes);
-  if (rounded < 60) return `~${rounded} мин`;
-  const h = Math.floor(rounded / 60);
-  const m = rounded % 60;
-  return m === 0 ? `~${h} ч` : `~${h} ч ${m} мин`;
-}
+import { estimateTravelMinutes, formatTravelMinutes } from "../travelEstimate";
 
 /** Approximate one-way travel time from the user's location — straight-line distance
  * and an assumed speed, not a real route (see travelEstimate.ts for why). */
@@ -22,7 +14,7 @@ export function TravelTimeButton({ destination }: { destination: [number, number
     try {
       const origin = await getUserLocation();
       const minutes = estimateTravelMinutes(origin, destination);
-      setState({ status: "idle", result: formatMinutes(minutes) });
+      setState({ status: "idle", result: formatTravelMinutes(minutes) });
     } catch (e) {
       setState({ status: "error", error: (e as Error).message });
     }
