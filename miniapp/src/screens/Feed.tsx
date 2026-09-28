@@ -5,10 +5,10 @@ import { EventMap } from "../components/EventMap";
 import { TimeFilter, type TimeRange } from "../components/TimeFilter";
 import { CategoryFilter } from "../components/CategoryFilter";
 import { AgeRatingFilter } from "../components/AgeRatingFilter";
-import { DistrictFilter } from "../components/DistrictFilter";
+import { RadiusFilter, DEFAULT_RADIUS_STATE, type RadiusState } from "../components/RadiusFilter";
 import { RecipientPickerModal } from "../components/RecipientPickerModal";
 import { ReturnByFilter, DEFAULT_RETURN_BY_STATE, type ReturnByState } from "../components/ReturnByFilter";
-import { fitsReturnBy } from "../travelEstimate";
+import { fitsReturnBy, distanceKm } from "../travelEstimate";
 
 const EMPTY_TIME_RANGE: TimeRange = {};
 
@@ -18,25 +18,25 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   const [timeRange, setTimeRange] = useState<TimeRange>({});
   const [categories, setCategories] = useState<string[]>([]);
   const [ratings, setRatings] = useState<number[]>([]);
-  const [districts, setDistricts] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [view, setView] = useState<"list" | "map">("list");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sendingEvent, setSendingEvent] = useState<EventDto | null>(null);
   const [returnBy, setReturnBy] = useState<ReturnByState>(DEFAULT_RETURN_BY_STATE);
+  const [radius, setRadius] = useState<RadiusState>(DEFAULT_RADIUS_STATE);
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetchEvents({ ...profile, ...timeRange, categories, ratings, districts })
+    fetchEvents({ ...profile, ...timeRange, categories, ratings })
       .then((res) => {
         setEvents(res.events);
         setFallback(res.fallback);
       })
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
-  }, [profile, timeRange, categories, ratings, districts]);
+  }, [profile, timeRange, categories, ratings]);
 
   function handleSend(eventId: string) {
     const event = events.find((e) => e.id === eventId);
@@ -57,21 +57,26 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
     (categories.length > 0 ? 1 : 0) +
     (hasTimeFilter ? 1 : 0) +
     (ratings.length > 0 ? 1 : 0) +
-    (districts.length > 0 ? 1 : 0) +
-    (returnBy.enabled ? 1 : 0);
+    (returnBy.enabled ? 1 : 0) +
+    (radius.enabled ? 1 : 0);
 
   function resetFilters() {
     setCategories([]);
     setTimeRange(EMPTY_TIME_RANGE);
     setRatings([]);
-    setDistricts([]);
     setReturnBy(DEFAULT_RETURN_BY_STATE);
+    setRadius(DEFAULT_RADIUS_STATE);
   }
 
-  const visibleEvents =
-    returnBy.enabled && returnBy.home
-      ? events.filter((e) => fitsReturnBy(e, { home: returnBy.home!, returnByTime: returnBy.returnByTime }))
-      : events;
+  const visibleEvents = events
+    .filter((e) => !returnBy.enabled || !returnBy.home || fitsReturnBy(e, { home: returnBy.home, returnByTime: returnBy.returnByTime }))
+    .filter(
+      (e) =>
+        !radius.enabled ||
+        !radius.center ||
+        !e.venue ||
+        distanceKm(radius.center, [e.venue.lat, e.venue.lon]) <= radius.radiusKm
+    );
 
   return (
     <div>
@@ -106,8 +111,8 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
             <AgeRatingFilter value={ratings} onChange={setRatings} />
           </div>
           <div className="filter-group">
-            <span className="filter-group-label">Район</span>
-            <DistrictFilter selected={districts} onChange={setDistricts} />
+            <span className="filter-group-label">Радиус</span>
+            <RadiusFilter value={radius} onChange={setRadius} />
           </div>
           <div className="filter-group">
             <span className="filter-group-label">Дорога туда и обратно</span>
@@ -131,16 +136,19 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
       {loading && <div className="empty-state">Загрузка…</div>}
       {!loading && !error && visibleEvents.length === 0 && (
         <div className="empty-state">
-          {returnBy.enabled && events.length > 0
-            ? "Ни на одно событие вы не успеете съездить и вернуться в срок."
-            : "Событий не найдено."}
+          {events.length === 0
+            ? "Событий не найдено."
+            : returnBy.enabled
+              ? "Ни на одно событие вы не успеете съездить и вернуться в срок."
+              : "В выбранном радиусе событий нет — попробуйте увеличить его."}
         </div>
       )}
 
       {!loading && !error && visibleEvents.length > 0 && view === "map" && (
         <EventMap
           events={visibleEvents}
-          userLocation={returnBy.enabled ? returnBy.home : null}
+          userLocation={(returnBy.enabled && returnBy.home) || (radius.enabled && radius.center) || null}
+          radiusCircle={radius.enabled && radius.center ? { center: radius.center, radiusKm: radius.radiusKm } : null}
           onSend={handleSend}
           onBuy={handleBuy}
           onBought={handleBought}

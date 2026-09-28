@@ -43,12 +43,14 @@ function escapeHtml(s: string): string {
 export function EventMap({
   events,
   userLocation = null,
+  radiusCircle = null,
   onSend,
   onBuy,
   onBought,
 }: {
   events: EventDto[];
   userLocation?: [number, number] | null;
+  radiusCircle?: { center: [number, number]; radiusKm: number } | null;
   onSend: (id: string) => void;
   onBuy: (event: EventDto) => void;
   onBought: (id: string) => void;
@@ -58,8 +60,10 @@ export function EventMap({
   const eventsRef = useRef<EventDto[]>(events);
   const eventsByIdRef = useRef<Map<string, EventDto>>(new Map());
   const userLocationRef = useRef<[number, number] | null>(userLocation);
+  const radiusCircleRef = useRef(radiusCircle);
   eventsRef.current = events;
   userLocationRef.current = userLocation;
+  radiusCircleRef.current = radiusCircle;
 
   function renderPlacemarks() {
     const map = mapRef.current;
@@ -107,6 +111,15 @@ export function EventMap({
       map.geoObjects.add(placemark);
     }
 
+    if (radiusCircleRef.current) {
+      const circle = new ymaps.Circle(
+        [radiusCircleRef.current.center, radiusCircleRef.current.radiusKm * 1000],
+        {},
+        { fillColor: "#2f6fed22", strokeColor: "#2f6fedaa", strokeWidth: 2, zIndex: 100 }
+      );
+      map.geoObjects.add(circle);
+    }
+
     if (userLocationRef.current) {
       const userMarker = new ymaps.Placemark(userLocationRef.current, {}, {
         iconLayout: ymaps.templateLayoutFactory.createClass('<div class="user-location-marker"></div>'),
@@ -141,11 +154,11 @@ export function EventMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Refresh pins whenever the filtered event list or user location changes.
+  // Refresh pins whenever the filtered event list, user location, or radius changes.
   useEffect(() => {
     if (mapRef.current) renderPlacemarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events, userLocation]);
+  }, [events, userLocation, radiusCircle]);
 
   // Delegate clicks on balloon action buttons (raw HTML, not React elements).
   useEffect(() => {

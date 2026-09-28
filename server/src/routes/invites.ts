@@ -61,7 +61,7 @@ export function registerInviteRoutes(app: FastifyInstance) {
       const eventWithVenue = {
         ...eventDomain,
         venue: venue
-          ? { name: venue.name, address: venue.address, lat: Number(venue.lat), lon: Number(venue.lon), district: venue.district ?? null }
+          ? { name: venue.name, address: venue.address, lat: Number(venue.lat), lon: Number(venue.lon) }
           : null,
       };
       const isCinema = eventDomain.category === "cinema";

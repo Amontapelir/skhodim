@@ -17,7 +17,6 @@ export interface Venue {
   address: string;
   lat: number;
   lon: number;
-  district: string | null;
 }
 
 export type EventCategory = "cinema" | "theatre" | "concert" | "museum" | "exhibition" | "other";
@@ -35,8 +34,6 @@ export interface Event {
   price: number;
   startsAt: string;
   purchaseUrl: string;
-  /** Denormalized from the venue by the route layer for filtering; absent until then. */
-  district?: string | null;
 }
 
 export type InviteResponseStatus = "pending" | "going" | "cannot" | "propose_other_date";

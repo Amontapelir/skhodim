@@ -18,8 +18,6 @@ export interface SelectionFilters {
   categories?: string[];
   /** Only events whose rating tier (0/6/12/16/18) is in this list are shown. Independent of the user's own ageGroup. */
   ratings?: number[];
-  /** Only events whose venue's district is in this list. Undefined/empty means no restriction. */
-  districts?: string[];
   fromDate?: string;
   toDate?: string;
 }
@@ -36,9 +34,6 @@ function fits(event: Event, filters: SelectionFilters): boolean {
     return false;
   }
   if (filters.ratings && filters.ratings.length > 0 && !filters.ratings.includes(ratingTierOf(event.minAge))) {
-    return false;
-  }
-  if (filters.districts && filters.districts.length > 0 && (!event.district || !filters.districts.includes(event.district))) {
     return false;
   }
 

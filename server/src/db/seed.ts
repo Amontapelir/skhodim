@@ -1,5 +1,4 @@
 import { dedupEvents, normalizeTitle } from "../domain/dedup";
-import { nearestDistrict } from "../domain/districts";
 import { db } from "./knex";
 import { TestJsonSource } from "../sources/TestJsonSource";
 import { ProCultureSource } from "../sources/ProCultureSource";
@@ -8,16 +7,10 @@ import { config } from "../config";
 import type { RawEvent } from "../sources/EventSource";
 
 async function upsertVenue(raw: RawEvent["venue"]): Promise<string> {
-  const district = nearestDistrict(raw.lat, raw.lon);
   const existing = await db("venues").where({ name: raw.name, address: raw.address }).first();
-  if (existing) {
-    // Backfills district on venues seeded before this field existed, without
-    // touching anything else about the row (events/invites reference it by id).
-    if (!existing.district) await db("venues").where({ id: existing.id }).update({ district });
-    return existing.id;
-  }
+  if (existing) return existing.id;
   const [row] = await db("venues")
-    .insert({ name: raw.name, address: raw.address, lat: raw.lat, lon: raw.lon, district })
+    .insert({ name: raw.name, address: raw.address, lat: raw.lat, lon: raw.lon })
     .returning("id");
   return row.id;
 }

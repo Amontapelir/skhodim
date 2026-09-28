@@ -2,9 +2,13 @@ interface YmapsPlacemark {
   events: { add(event: string, handler: () => void): void };
 }
 
+interface YmapsGeoObject {
+  events: { add(event: string, handler: () => void): void };
+}
+
 interface YmapsMap {
   destroy(): void;
-  geoObjects: { add(obj: YmapsPlacemark): void; removeAll(): void };
+  geoObjects: { add(obj: YmapsGeoObject): void; removeAll(): void };
 }
 
 declare global {
@@ -20,6 +24,11 @@ declare global {
         properties: Record<string, unknown>,
         options: Record<string, unknown>
       ) => YmapsPlacemark;
+      Circle: new (
+        geometry: [[number, number], number],
+        properties?: Record<string, unknown>,
+        options?: Record<string, unknown>
+      ) => YmapsGeoObject;
       templateLayoutFactory: { createClass(template: string): unknown };
     };
   }

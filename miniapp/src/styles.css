@@ -660,3 +660,20 @@ div[class*="-balloon__close-button"] {
   color: var(--text-muted);
   flex-basis: 100%;
 }
+
+.radius-filter {
+  align-items: center;
+}
+
+.radius-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.radius-slider input[type="range"] {
+  width: 120px;
+}
