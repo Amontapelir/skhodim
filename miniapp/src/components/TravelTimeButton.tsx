@@ -1,30 +1,35 @@
 import { useState } from "react";
-import { isYandexMapsAvailable, travelTimeTo, type TravelTime } from "../yandexMaps";
+import { getUserLocation } from "../yandexMaps";
+import { estimateTravelMinutes } from "../travelEstimate";
 
-/** Renders nothing when no Yandex Maps API key is configured. */
+function formatMinutes(minutes: number): string {
+  const rounded = Math.round(minutes);
+  if (rounded < 60) return `~${rounded} мин`;
+  const h = Math.floor(rounded / 60);
+  const m = rounded % 60;
+  return m === 0 ? `~${h} ч` : `~${h} ч ${m} мин`;
+}
+
+/** Approximate one-way travel time from the user's location — straight-line distance
+ * and an assumed speed, not a real route (see travelEstimate.ts for why). */
 export function TravelTimeButton({ destination }: { destination: [number, number] }) {
-  const [state, setState] = useState<{ status: "idle" | "loading" | "error"; result?: TravelTime; error?: string }>({
+  const [state, setState] = useState<{ status: "idle" | "loading" | "error"; result?: string; error?: string }>({
     status: "idle",
   });
-
-  if (!isYandexMapsAvailable()) return null;
 
   async function handleClick() {
     setState({ status: "loading" });
     try {
-      const result = await travelTimeTo(destination);
-      setState({ status: "idle", result });
+      const origin = await getUserLocation();
+      const minutes = estimateTravelMinutes(origin, destination);
+      setState({ status: "idle", result: formatMinutes(minutes) });
     } catch (e) {
       setState({ status: "error", error: (e as Error).message });
     }
   }
 
   if (state.result) {
-    return (
-      <span className="travel-time-result">
-        🚗 {state.result.humanTime}, {state.result.humanLength}
-      </span>
-    );
+    return <span className="travel-time-result">🚗 {state.result} (приблизительно)</span>;
   }
 
   return (

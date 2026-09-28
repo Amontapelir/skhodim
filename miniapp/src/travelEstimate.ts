@@ -1,9 +1,9 @@
-// Rough, offline estimate of round-trip feasibility — deliberately NOT using
-// the real Yandex Routing API here. That API has a 100-requests/day free
-// quota, and this filter has to be evaluated against every event on every
-// filter change; a real route call per event would burn the whole day's
-// quota in one screen. The precise per-card "Время в пути" button still
-// uses the real API, one request at a time, on explicit user click.
+// Rough, offline estimate of travel time and round-trip feasibility.
+// Deliberately not calling Yandex's real routing API: that product isn't
+// provisioned for this key (route() rejects with a bare "scriptError"), and
+// even if it were, its 100-requests/day free quota can't cover evaluating
+// every event on every filter change. Used both by the "Успею и вернусь"
+// filter and by the per-card "Время в пути" button.
 
 // Average city travel speed accounting for traffic/transfers, km/h.
 const ASSUMED_SPEED_KMH = 22;

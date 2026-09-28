@@ -11,10 +11,6 @@ declare global {
   interface Window {
     ymaps?: {
       ready(cb: () => void): void;
-      route(
-        points: Array<[number, number]>,
-        options?: Record<string, unknown>
-      ): Promise<{ getHumanTime(): string; getHumanLength(): string }>;
       Map: new (
         container: HTMLElement,
         state: { center: [number, number]; zoom: number; controls?: string[] }
@@ -68,18 +64,3 @@ export function getUserLocation(): Promise<[number, number]> {
   });
 }
 
-export interface TravelTime {
-  humanTime: string;
-  humanLength: string;
-}
-
-/** Route duration/distance from the user's current location to a venue, via Yandex Maps. */
-export async function travelTimeTo(destination: [number, number]): Promise<TravelTime> {
-  if (!isYandexMapsAvailable()) {
-    throw new Error("Ключ Яндекс.Карт не настроен (VITE_YANDEX_MAPS_API_KEY)");
-  }
-  const origin = await getUserLocation();
-  await loadYandexMaps();
-  const route = await window.ymaps!.route([origin, destination]);
-  return { humanTime: route.getHumanTime(), humanLength: route.getHumanLength() };
-}
