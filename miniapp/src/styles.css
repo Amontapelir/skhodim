@@ -431,29 +431,41 @@ body {
   flex-wrap: wrap;
 }
 
-/* Yandex Maps class names are versioned (ymaps-2-1-NN-…) and the build number
-   isn't guaranteed to match what we hardcode, so target them with wildcards. */
-div[class*="-balloon__layout"] {
+/* Yandex Maps renders balloon internals as custom <ymaps> elements, not
+   <div>s — a tag-qualified selector (div[class*=...]) silently matches
+   nothing. Class names are also versioned (ymaps-2-1-NN-…) and the build
+   number isn't guaranteed to match what we hardcode, so target by class
+   substring only, no tag qualifier. */
+[class*="-balloon__layout"] {
   border-radius: var(--radius-lg) !important;
   box-shadow: var(--shadow-card) !important;
   border: 1px solid var(--border) !important;
-  overflow: hidden !important;
 }
 
-div[class*="-balloon__content"] {
+[class*="-balloon__content"] {
   padding: 0 !important;
   margin: 0 !important;
   max-width: 260px !important;
+  overflow: visible !important;
 }
 
-div[class*="-balloon__tail"] {
+[class*="-balloon__tail"] {
   display: none !important;
 }
 
-div[class*="-balloon__close-button"] {
-  top: 10px !important;
-  right: 10px !important;
-  opacity: 0.5;
+[class*="-balloon__close-button"] {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  background-color: var(--surface) !important;
+  background-position: center !important;
+  background-size: 10px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 1px 4px rgba(42, 32, 29, 0.25) !important;
+  opacity: 1 !important;
+  z-index: 10;
 }
 
 .affordability-tag {
