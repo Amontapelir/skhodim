@@ -69,6 +69,12 @@ export class MaxBotAdapter implements MessengerAdapter {
   }
 
   start(): void {
-    this.bot.start();
+    // bot.start() is async — if this rejects (bad token, network/TLS issue)
+    // without a .catch(), Node treats it as an unhandled rejection and kills
+    // the whole process, taking the rest of the API down with it. A
+    // synchronous try/catch around the call site does NOT catch this.
+    this.bot.start().catch((err) => {
+      console.error("MaxBotAdapter: bot.start() failed, MAX bot will not receive updates:", err);
+    });
   }
 }

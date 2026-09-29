@@ -31,6 +31,12 @@ services:
       # index.ts) — сервер не упадёт, но и бот отвечать не будет.
       - key: MAX_BOT_TOKEN
         sync: false
+      # platform-api2.max.ru отдаёт сертификат, подписанный российским
+      # корневым CA (Минцифры) — его нет в стандартном доверенном списке
+      # Node.js/большинства ОС, без этого файла TLS-рукопожатие падает с
+      # UNABLE_TO_GET_ISSUER_CERT_LOCALLY. Сертификат — server/certs/.
+      - key: NODE_EXTRA_CA_CERTS
+        value: certs/russian-trusted-ca.pem
       - key: CORS_ORIGIN
         value: "*"
 
