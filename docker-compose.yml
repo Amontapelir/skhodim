@@ -9,6 +9,42 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skhodim"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  server:
+    build: ./server
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://skhodim:skhodim@db:5432/skhodim
+      CORS_ORIGIN: "*"
+      # test — детерминированный офлайн-срез из 80 событий, без внешних
+      # запросов; переключите на kudago для живых данных (может быть
+      # нестабильным — см. README).
+      EVENT_SOURCE: ${EVENT_SOURCE:-test}
+      BOT_ADAPTER: ${BOT_ADAPTER:-mock}
+      MAX_BOT_TOKEN: ${MAX_BOT_TOKEN:-}
+      MINIAPP_URL: ${MINIAPP_URL:-http://localhost:5173}
+      NODE_EXTRA_CA_CERTS: certs/russian-trusted-ca.pem
+    ports:
+      - "3000:3000"
+
+  miniapp:
+    build:
+      context: ./miniapp
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000}
+        VITE_YANDEX_MAPS_API_KEY: ${VITE_YANDEX_MAPS_API_KEY:-}
+    depends_on:
+      - server
+    ports:
+      - "5173:80"
 
 volumes:
   pgdata:

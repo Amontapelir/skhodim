@@ -1,0 +1,111 @@
+# Схема для автоматической проверки платформой хакатона.
+# Соответствует пп. "ТОЛЬКО ДЛЯ РЕШЕНИЙ С СОБСТВЕННЫМ API" методички трека
+# «Досуг и развлечения». Полное описание методов и схем — server/openapi.yaml.
+version: "1.0.0"
+solution: "Сходим?"
+base_url: "https://skhodim-server.onrender.com"
+# Локально (docker compose up): http://localhost:3000
+
+checks:
+  - name: "Подборка событий под профиль"
+    method: GET
+    path: /events
+    query:
+      ageGroup: "16-17"
+      balance: 5000
+      cinemaLimit: 2000
+    role: "пользователь (без авторизации, есть только идентификатор max_user_id)"
+    expected_status: [200]
+    expected_content_type: application/json
+    expected_body_fields: [events, fallback]
+
+  - name: "Профиль тестового пользователя"
+    method: GET
+    path: /users/{maxUserId}
+    path_params:
+      maxUserId: "dev-user-1"
+    role: "пользователь"
+    expected_status: [200]
+    expected_content_type: application/json
+    expected_body_fields: [id, maxUserId, balance, cinemaLimit, ageGroup, onboardingComplete]
+
+  - name: "Контакты, знакомые боту (для выбора получателя приглашения)"
+    method: GET
+    path: /users/{maxUserId}/contacts
+    path_params:
+      maxUserId: "dev-user-1"
+    role: "пользователь"
+    expected_status: [200]
+    expected_content_type: application/json
+
+  - name: "Исправить остаток/лимит/возраст (кнопка «Поправить остаток»)"
+    method: PATCH
+    path: /users/{maxUserId}
+    path_params:
+      maxUserId: "dev-user-1"
+    body:
+      balance: 3000
+    role: "пользователь"
+    expected_status: [200]
+    expected_content_type: application/json
+    expected_body_fields: [balance]
+
+  - name: "«Купил» — уменьшить показываемый остаток"
+    method: POST
+    path: /users/{maxUserId}/purchases
+    path_params:
+      maxUserId: "dev-user-2"
+    body:
+      eventId: "<id события из ответа GET /events, дешевле остатка dev-user-2>"
+    role: "пользователь"
+    expected_status: [200, 400]
+    expected_content_type: application/json
+
+  - name: "«Позвать» — создать приглашение (Must, §3.3 ТЗ)"
+    method: POST
+    path: /invites
+    body:
+      eventId: "<id события из ответа GET /events>"
+      fromMaxUserId: "dev-user-2"
+      toMaxUserIds: ["dev-user-1"]
+    role: "пользователь"
+    expected_status: [201]
+    expected_content_type: application/json
+    expected_body_fields: [id]
+
+  - name: "Раздел «Зовут» — входящие приглашения одним списком"
+    method: GET
+    path: /users/{maxUserId}/invites
+    path_params:
+      maxUserId: "dev-user-1"
+    role: "пользователь"
+    expected_status: [200]
+    expected_content_type: application/json
+
+  - name: "Ответить на приглашение: Иду/Не могу/Другая дата"
+    method: POST
+    path: /invites/{inviteId}/respond
+    path_params:
+      inviteId: "<inviteId из ответа GET /users/{maxUserId}/invites>"
+    body:
+      maxUserId: "dev-user-1"
+      status: "going"
+    role: "пользователь"
+    expected_status: [200]
+    expected_content_type: application/json
+    expected_body_fields: [status]
+
+# Тестовые учётные записи — создаются автоматически при каждом старте
+# (server/scripts/seed-dev-users.ts, часть startCommand/Dockerfile CMD),
+# не требуют ручной настройки:
+test_accounts:
+  - maxUserId: dev-user-1
+    displayName: "Аня"
+    ageGroup: "16-17"
+    balance: 3500
+    cinemaLimit: 1200
+  - maxUserId: dev-user-2
+    displayName: "Максим"
+    ageGroup: "18-22"
+    balance: 4500
+    cinemaLimit: 2000

@@ -1,0 +1,357 @@
+openapi: 3.0.3
+info:
+  title: Сходим? — API
+  description: >
+    Бэкенд мини-приложения «Сходим?» (MAX). Без собственной авторизации —
+    пользователь идентифицируется по max_user_id, полученному ботом из MAX
+    Bridge/контекста чата. Нет ФИО, телефона, паспортных данных; баланс —
+    самостоятельно введённое пользователем число, не факт оплаты.
+  version: "0.1.0"
+servers:
+  - url: http://localhost:3000
+    description: Локально (docker compose up) или после npm run dev
+  - url: https://skhodim-server.onrender.com
+    description: Прод (Render, бесплатный тариф — просыпается ~30-60с после простоя)
+
+paths:
+  /events:
+    get:
+      summary: Подборка событий под профиль пользователя
+      description: >
+        Возвращает события, у которых цена ≤ остатку (для кино — ≤
+        min(остаток, кино-лимит)), возрастной ценз ≤ возрасту пользователя,
+        дата не в прошлом. Пустой строгий результат — fallback:true с
+        ближайшей альтернативой вместо пустого списка.
+      parameters:
+        - name: ageGroup
+          in: query
+          required: true
+          schema: { type: string, enum: [14-15, 16-17, 18-22] }
+        - name: balance
+          in: query
+          required: true
+          schema: { type: number, minimum: 0 }
+          description: Остаток на Пушкинской карте, ₽
+        - name: cinemaLimit
+          in: query
+          required: true
+          schema: { type: number, minimum: 0 }
+          description: Остаток кино-лимита, ₽
+        - name: afterHour
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 23 }
+        - name: beforeHour
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 24 }
+        - name: fromDate
+          in: query
+          schema: { type: string, format: date }
+        - name: toDate
+          in: query
+          schema: { type: string, format: date }
+        - name: categories
+          in: query
+          schema: { type: string }
+          description: Через запятую, например "theatre,museum"
+        - name: ratings
+          in: query
+          schema: { type: string }
+          description: "Резерв под возрастной ценз событий через запятую (не используется в MVP UI)"
+      responses:
+        "200":
+          description: Подборка событий
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [events, fallback]
+                properties:
+                  events:
+                    type: array
+                    items: { $ref: "#/components/schemas/EventWithVenue" }
+                  fallback:
+                    type: boolean
+                    description: true, если строгий фильтр дал пусто и показана ближайшая альтернатива
+              example:
+                events:
+                  - id: "8f5aa582-8feb-42b9-80ee-94eb3f94ec20"
+                    title: "Чайка"
+                    category: "theatre"
+                    minAge: 14
+                    price: 900
+                    startsAt: "2026-10-12T16:00:00.000Z"
+                    venue: { name: "Театр Сатиры", address: "Триумфальная пл., 2", lat: 55.77, lon: 37.6 }
+                fallback: false
+        "400":
+          description: Не хватает обязательных query-параметров или они некорректны
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /users/{maxUserId}:
+    get:
+      summary: Профиль пользователя
+      parameters:
+        - $ref: "#/components/parameters/MaxUserId"
+      responses:
+        "200":
+          description: Профиль найден
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    patch:
+      summary: Исправить остаток / кино-лимит / возраст / имя
+      parameters:
+        - $ref: "#/components/parameters/MaxUserId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                balance: { type: number }
+                cinemaLimit: { type: number }
+                ageGroup: { type: string, enum: [14-15, 16-17, 18-22] }
+                displayName: { type: string }
+              example: { balance: 3000 }
+      responses:
+        "200":
+          description: Обновлённый профиль
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /users/{maxUserId}/contacts:
+    get:
+      summary: Контакты, знакомые боту (для выбора получателя приглашения)
+      description: >
+        Все прошедшие онбординг пользователи, кроме самого maxUserId —
+        заглушка вместо реального списка контактов MAX на время MVP.
+      parameters:
+        - $ref: "#/components/parameters/MaxUserId"
+      responses:
+        "200":
+          description: Список контактов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    maxUserId: { type: string }
+                    displayName: { type: string, nullable: true }
+              example: [{ maxUserId: "dev-user-2", displayName: "Максим" }]
+
+  /users/{maxUserId}/purchases:
+    post:
+      summary: "«Купил» — уменьшить показываемый остаток на цену события"
+      description: Самооценка пользователя, не факт оплаты — платежи сервис не принимает.
+      parameters:
+        - $ref: "#/components/parameters/MaxUserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId]
+              properties:
+                eventId: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Обновлённый профиль с уменьшенным остатком
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "400":
+          description: Цена события больше остатка/кино-лимита
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: Пользователь или событие не найдены
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /invites:
+    post:
+      summary: "«Позвать» — создать приглашение и уведомить получателей в MAX"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, fromMaxUserId, toMaxUserIds]
+              properties:
+                eventId: { type: string, format: uuid }
+                fromMaxUserId: { type: string }
+                toMaxUserIds: { type: array, items: { type: string } }
+              example:
+                eventId: "8f5aa582-8feb-42b9-80ee-94eb3f94ec20"
+                fromMaxUserId: "dev-user-2"
+                toMaxUserIds: ["dev-user-1"]
+      responses:
+        "201":
+          description: Приглашение создано
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+        "404":
+          description: Отправитель или событие не найдены
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /users/{maxUserId}/invites:
+    get:
+      summary: "Раздел «Зовут» — все входящие приглашения одним списком"
+      parameters:
+        - $ref: "#/components/parameters/MaxUserId"
+      responses:
+        "200":
+          description: Список входящих приглашений с пометкой «помещается/не хватает»
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/InviteWithStatus" }
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+  /invites/{inviteId}/respond:
+    post:
+      summary: "Ответить на приглашение: Иду / Не могу / Предложить другую дату"
+      parameters:
+        - name: inviteId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [maxUserId, status]
+              properties:
+                maxUserId: { type: string }
+                status: { type: string, enum: [going, cannot, propose_other_date] }
+                proposedDate:
+                  type: string
+                  format: date-time
+                  description: Обязателен, если status = propose_other_date
+              example: { maxUserId: "dev-user-1", status: "going" }
+      responses:
+        "200":
+          description: Обновлённый статус ответа
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InviteResponse" }
+        "400":
+          description: Некорректный status или отсутствует proposedDate
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "404":
+          description: Пользователь или ответ на приглашение не найдены
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
+components:
+  parameters:
+    MaxUserId:
+      name: maxUserId
+      in: path
+      required: true
+      schema: { type: string }
+      description: 'Идентификатор пользователя MAX. Тестовые значения: dev-user-1, dev-user-2 (см. scripts/seed-dev-users.ts).'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+    Venue:
+      type: object
+      properties:
+        name: { type: string }
+        address: { type: string }
+        lat: { type: number }
+        lon: { type: number }
+    Event:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        externalId: { type: string }
+        source: { type: string, enum: [test, proculture, kudago] }
+        title: { type: string }
+        normalizedTitle: { type: string }
+        description: { type: string, nullable: true }
+        venueId: { type: string, format: uuid }
+        category: { type: string, enum: [cinema, theatre, concert, museum, exhibition, other] }
+        minAge: { type: integer }
+        price: { type: number }
+        startsAt: { type: string, format: date-time }
+        purchaseUrl: { type: string }
+    EventWithVenue:
+      allOf:
+        - $ref: "#/components/schemas/Event"
+        - type: object
+          properties:
+            venue: { $ref: "#/components/schemas/Venue" }
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        maxUserId: { type: string }
+        displayName: { type: string, nullable: true }
+        ageGroup: { type: string, enum: [14-15, 16-17, 18-22], nullable: true }
+        balance: { type: number }
+        cinemaLimit: { type: number }
+        onboardingComplete: { type: boolean }
+        createdAt: { type: string, format: date-time }
+    InviteResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        inviteId: { type: string, format: uuid }
+        userId: { type: string, format: uuid }
+        status: { type: string, enum: [pending, going, cannot, propose_other_date] }
+        proposedDate: { type: string, format: date-time, nullable: true }
+        respondedAt: { type: string, format: date-time, nullable: true }
+    InviteWithStatus:
+      type: object
+      properties:
+        inviteId: { type: string, format: uuid }
+        event: { $ref: "#/components/schemas/EventWithVenue" }
+        fitsBalance: { type: boolean }
+        shortfall: { type: number, description: "0, если помещается в остаток" }
+        myStatus: { type: string, enum: [pending, going, cannot, propose_other_date] }
+        responses:
+          type: array
+          items:
+            type: object
+            properties:
+              userMaxId: { type: string }
+              displayName: { type: string, nullable: true }
+              status: { type: string }
+              proposedDate: { type: string, nullable: true }
