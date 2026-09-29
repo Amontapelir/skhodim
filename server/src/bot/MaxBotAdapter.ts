@@ -17,6 +17,13 @@ import type {
  * free tier sleeps on inactivity either way, so a webhook wouldn't avoid
  * that class of problem.
  */
+// User isn't re-exported from the package's public entry point (only from
+// unexported internal paths) — a minimal local shape avoids importing dist
+// internals for a name we already know: `${first_name} ${last_name}`.
+function formatDisplayName(user: { first_name: string; last_name?: string }): string {
+  return user.last_name ? `${user.first_name} ${user.last_name}` : user.first_name;
+}
+
 export class MaxBotAdapter implements MessengerAdapter {
   private readonly bot: Bot;
   private startHandlers: Array<(start: IncomingStart) => Promise<void>> = [];
@@ -39,8 +46,9 @@ export class MaxBotAdapter implements MessengerAdapter {
       if (ctx.chatId == null) return;
       const chatId = String(ctx.chatId);
       const userId = String(ctx.update.user.user_id);
+      const displayName = formatDisplayName(ctx.update.user);
       for (const handler of this.startHandlers) {
-        await handler({ chatId, userId });
+        await handler({ chatId, userId, displayName });
       }
     });
   }
@@ -90,9 +98,14 @@ export class MaxBotAdapter implements MessengerAdapter {
     // message itself instead, which is properly typed.
     this.bot.on("message_created", async (ctx) => {
       const text = ctx.message?.body.text;
-      const senderId = ctx.message?.sender?.user_id;
-      if (text == null || ctx.chatId == null || senderId == null) return;
-      await handler({ chatId: String(ctx.chatId), userId: String(senderId), text });
+      const sender = ctx.message?.sender;
+      if (text == null || ctx.chatId == null || sender?.user_id == null) return;
+      await handler({
+        chatId: String(ctx.chatId),
+        userId: String(sender.user_id),
+        text,
+        displayName: formatDisplayName(sender),
+      });
     });
   }
 

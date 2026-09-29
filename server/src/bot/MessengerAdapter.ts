@@ -2,6 +2,8 @@ export interface IncomingMessage {
   chatId: string;
   userId: string;
   text: string;
+  /** The name MAX itself reports for this user, when the adapter can provide it (e.g. real MAX; absent for the mock). */
+  displayName?: string;
 }
 
 export interface IncomingCallback {
@@ -13,6 +15,8 @@ export interface IncomingCallback {
 export interface IncomingStart {
   chatId: string;
   userId: string;
+  /** The name MAX itself reports for this user, when the adapter can provide it (e.g. real MAX; absent for the mock). */
+  displayName?: string;
 }
 
 export interface EventCard {

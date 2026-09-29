@@ -35,10 +35,12 @@ registerProfileRoutes(app);
 registerInviteRoutes(app, bot);
 
 bot.onMessage(async (msg) => {
+  if (msg.displayName) await profileStore.upsertDisplayName(msg.userId, msg.displayName);
   await handleOnboardingMessage(bot, profileStore, msg.chatId, msg.userId, msg.text);
 });
 
 bot.onStart?.(async (start) => {
+  if (start.displayName) await profileStore.upsertDisplayName(start.userId, start.displayName);
   await handleOnboardingStart(bot, profileStore, start.chatId, start.userId);
 });
 

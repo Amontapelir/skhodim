@@ -19,6 +19,14 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Covers the area exposed by iOS/Android bounce-scroll beyond <body> —
+     without this, that area falls back to the browser/webview's own
+     background, which can be dark on a device with system dark mode even
+     though this app has no dark theme at all. */
+  background: var(--bg);
+}
+
 body {
   margin: 0;
   font-family: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
