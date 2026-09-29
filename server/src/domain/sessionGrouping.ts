@@ -4,6 +4,7 @@ export interface EventSession {
   id: string;
   startsAt: string;
   price: number;
+  purchaseUrl: string;
 }
 
 /**
@@ -34,7 +35,7 @@ export function groupBySession<T extends Event>(events: T[]): Array<T & { sessio
     const sorted = [...group].sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime());
     result.push({
       ...sorted[0],
-      sessions: sorted.map((s) => ({ id: s.id, startsAt: s.startsAt, price: s.price })),
+      sessions: sorted.map((s) => ({ id: s.id, startsAt: s.startsAt, price: s.price, purchaseUrl: s.purchaseUrl })),
     });
   }
   return result;

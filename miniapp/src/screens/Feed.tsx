@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { fetchEvents, markPurchased, type AgeGroup, type EventDto } from "../api";
+import { fetchEvents, markPurchased, type AgeGroup, type EventDto, type EventSession } from "../api";
 import { EventCard } from "../components/EventCard";
 import { EventMap } from "../components/EventMap";
 import { TimeFilter, type TimeRange } from "../components/TimeFilter";
@@ -22,7 +22,7 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   const [view, setView] = useState<"list" | "map">("list");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sendingEvent, setSendingEvent] = useState<EventDto | null>(null);
+  const [sendingEvent, setSendingEvent] = useState<{ id: string; title: string } | null>(null);
   const [returnBy, setReturnBy] = useState<ReturnByState>(DEFAULT_RETURN_BY_STATE);
   const [radius, setRadius] = useState<RadiusState>(DEFAULT_RADIUS_STATE);
 
@@ -38,17 +38,16 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
       .finally(() => setLoading(false));
   }, [profile, timeRange, categories, ratings]);
 
-  function handleSend(eventId: string) {
-    const event = events.find((e) => e.id === eventId);
-    if (event) setSendingEvent(event);
+  function handleSend(eventTitle: string, session: EventSession) {
+    setSendingEvent({ id: session.id, title: eventTitle });
   }
 
-  async function handleBuy(event: EventDto) {
-    window.open(event.purchaseUrl, "_blank");
+  async function handleBuy(session: EventSession) {
+    window.open(session.purchaseUrl, "_blank");
   }
 
-  async function handleBought(eventId: string) {
-    await markPurchased(maxUserId, eventId);
+  async function handleBought(session: EventSession) {
+    await markPurchased(maxUserId, session.id);
     alert("Остаток обновлён.");
   }
 
@@ -78,12 +77,14 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   );
   const handleMapAction = useCallback(
     (eventId: string, action: string) => {
-      if (action === "send") handleSend(eventId);
-      if (action === "buy") {
-        const event = events.find((e) => e.id === eventId);
-        if (event) handleBuy(event);
-      }
-      if (action === "bought") handleBought(eventId);
+      // The map balloon shows a single pin per representative event (no
+      // session picker there yet) — always acts on that event's own session.
+      const event = events.find((e) => e.id === eventId);
+      if (!event) return;
+      const session: EventSession = { id: event.id, startsAt: event.startsAt, price: event.price, purchaseUrl: event.purchaseUrl };
+      if (action === "send") handleSend(event.title, session);
+      if (action === "buy") handleBuy(session);
+      if (action === "bought") handleBought(session);
     },
     [events]
   );
@@ -197,9 +198,9 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
           <EventCard
             key={event.id}
             event={event}
-            onSend={() => handleSend(event.id)}
-            onBuy={() => handleBuy(event)}
-            onBought={() => handleBought(event.id)}
+            onSend={(session) => handleSend(event.title, session)}
+            onBuy={handleBuy}
+            onBought={handleBought}
           />
         ))}
 

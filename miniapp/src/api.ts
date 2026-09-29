@@ -1,5 +1,12 @@
 export type AgeGroup = "14-15" | "16-17" | "18-22";
 
+export interface EventSession {
+  id: string;
+  startsAt: string;
+  price: number;
+  purchaseUrl: string;
+}
+
 export interface EventDto {
   id: string;
   title: string;
@@ -11,6 +18,8 @@ export interface EventDto {
   purchaseUrl: string;
   venueId: string;
   venue: { name: string; address: string; lat: number; lon: number } | null;
+  /** Present only when this event has more than one showtime at the same venue. Sorted by time, includes this card's own session. */
+  sessions?: EventSession[];
 }
 
 export interface EventsResponse {
@@ -63,6 +72,12 @@ export async function fetchEvents(params: {
   if (params.ratings && params.ratings.length > 0) q.set("ratings", params.ratings.join(","));
   const res = await fetch(`${BASE}/events?${q}`);
   if (!res.ok) throw new Error(`fetchEvents failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchEventSessions(eventId: string): Promise<EventSession[]> {
+  const res = await fetch(`${BASE}/events/${eventId}/sessions`);
+  if (!res.ok) throw new Error(`fetchEventSessions failed: ${res.status}`);
   return res.json();
 }
 

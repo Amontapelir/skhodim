@@ -94,6 +94,13 @@ export function registerEventRoutes(app: FastifyInstance) {
       .andWhere("starts_at", ">=", new Date().toISOString())
       .orderBy("starts_at", "asc");
 
-    return reply.send(siblings.map((row) => ({ id: row.id, startsAt: new Date(row.starts_at).toISOString(), price: row.price })));
+    return reply.send(
+      siblings.map((row) => ({
+        id: row.id,
+        startsAt: new Date(row.starts_at).toISOString(),
+        price: row.price,
+        purchaseUrl: row.purchase_url,
+      }))
+    );
   });
 }

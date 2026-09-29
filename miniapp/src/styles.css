@@ -351,6 +351,31 @@ body {
   margin: 0 0 10px;
 }
 
+.session-picker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.session-chip {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-chip.active {
+  background: var(--cat, var(--primary));
+  border-color: var(--cat, var(--primary));
+  color: #fff;
+}
+
 .ticket-actions {
   display: flex;
   gap: 8px;

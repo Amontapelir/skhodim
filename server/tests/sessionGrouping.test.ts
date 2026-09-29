@@ -39,9 +39,9 @@ describe("groupBySession", () => {
     expect(result[0].id).toBe("b");
     expect(result[0].startsAt).toBe("2026-10-10T13:00:00.000Z");
     expect(result[0].sessions).toEqual([
-      { id: "b", startsAt: "2026-10-10T13:00:00.000Z", price: 250 },
-      { id: "c", startsAt: "2026-10-10T16:00:00.000Z", price: 280 },
-      { id: "a", startsAt: "2026-10-10T19:00:00.000Z", price: 300 },
+      { id: "b", startsAt: "2026-10-10T13:00:00.000Z", price: 250, purchaseUrl: "https://example.org" },
+      { id: "c", startsAt: "2026-10-10T16:00:00.000Z", price: 280, purchaseUrl: "https://example.org" },
+      { id: "a", startsAt: "2026-10-10T19:00:00.000Z", price: 300, purchaseUrl: "https://example.org" },
     ]);
   });
 
