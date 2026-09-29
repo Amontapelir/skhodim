@@ -195,7 +195,7 @@ function InvitesMap({
   return <EventMap events={events} renderActions={renderActions} onAction={onAction} />;
 }
 
-export function Invites({ maxUserId }: { maxUserId: string }) {
+export function Invites({ maxUserId, onInvitesChanged }: { maxUserId: string; onInvitesChanged?: () => void }) {
   const [invites, setInvites] = useState<InviteListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -208,6 +208,7 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
     try {
       const data = await fetchIncomingInvites(maxUserId);
       setInvites(data);
+      onInvitesChanged?.();
     } catch (e) {
       setError(String(e));
     } finally {
