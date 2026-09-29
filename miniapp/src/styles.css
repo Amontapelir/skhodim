@@ -434,7 +434,12 @@ body {
 
 .map-wrap {
   margin: 4px 14px 14px;
-  height: 420px;
+  /* Fill most of the viewport below the tabs/filters, so the map (and a
+     ticket popped open on it) reads as the main screen, with the footer
+     disclaimer requiring a scroll instead of always squeezed into view. */
+  height: calc(100vh - 190px);
+  min-height: 380px;
+  max-height: 720px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -504,7 +509,7 @@ body {
    get out of the way and stop imposing its own auto-measured width, which
    used to clip long descriptions mid-word. */
 .ticket-balloon {
-  width: 300px;
+  width: min(92vw, 360px);
   margin: 0;
 }
 
