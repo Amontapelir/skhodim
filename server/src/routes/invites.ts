@@ -1,10 +1,11 @@
 import type { FastifyInstance } from "fastify";
 import { db } from "../db/knex";
 import { eventRowToDomain } from "../domain/mapRow";
+import type { MessengerAdapter } from "../bot/MessengerAdapter";
 
 const VALID_STATUSES = ["going", "cannot", "propose_other_date"] as const;
 
-export function registerInviteRoutes(app: FastifyInstance) {
+export function registerInviteRoutes(app: FastifyInstance, bot: MessengerAdapter) {
   // Create an invite from one user to a set of recipients for an event.
   app.post("/invites", async (req, reply) => {
     const { eventId, fromMaxUserId, toMaxUserIds } = req.body as {
@@ -17,6 +18,7 @@ export function registerInviteRoutes(app: FastifyInstance) {
     if (!fromUser) return reply.status(404).send({ error: "sender not found" });
     const event = await db("events").where({ id: eventId }).first();
     if (!event) return reply.status(404).send({ error: "event not found" });
+    const venue = await db("venues").where({ id: event.venue_id }).first();
 
     const [invite] = await db("invites")
       .insert({ event_id: eventId, from_user_id: fromUser.id })
@@ -25,6 +27,23 @@ export function registerInviteRoutes(app: FastifyInstance) {
     const recipients = await db("users").whereIn("max_user_id", toMaxUserIds);
     for (const recipient of recipients) {
       await db("invite_responses").insert({ invite_id: invite.id, user_id: recipient.id, status: "pending" });
+
+      const eventDomain = eventRowToDomain(event);
+      const startsAt = new Date(eventDomain.startsAt).toLocaleString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      // A failed MAX notification must not roll back the invite itself — the
+      // recipient still sees it in the "Зовут" section next time they open
+      // the mini-app, same fail-safe pattern as fetchWithFallback/createBotAdapter.
+      bot
+        .sendInviteNotification(recipient.max_user_id, {
+          eventTitle: eventDomain.title,
+          eventSubtitle: `${venue?.name ?? ""}, ${startsAt}`.trim(),
+        })
+        .catch((err) => app.log.error({ err, recipient: recipient.max_user_id }, "sendInviteNotification failed"));
     }
 
     return reply.status(201).send({ id: invite.id });

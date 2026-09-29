@@ -1,4 +1,4 @@
-import type { EventCard, IncomingCallback, IncomingMessage, MessengerAdapter } from "./MessengerAdapter";
+import type { EventCard, IncomingCallback, IncomingMessage, InviteNotification, MessengerAdapter } from "./MessengerAdapter";
 
 /**
  * In-memory mock with the same contract as the real MAX adapter. Outbound
@@ -18,6 +18,12 @@ export class MockMaxAdapter implements MessengerAdapter {
   async sendCard(chatId: string, card: EventCard): Promise<void> {
     this.sent.push({ chatId, kind: "card", content: card });
     console.log(`[mock-max -> ${chatId}] card: ${card.title} (${card.buttons.map((b) => b.label).join(", ")})`);
+  }
+
+  async sendInviteNotification(userId: string, notification: InviteNotification): Promise<void> {
+    const text = `Тебя зовут: ${notification.eventTitle}\n${notification.eventSubtitle}`;
+    this.sent.push({ chatId: userId, kind: "message", content: text });
+    console.log(`[mock-max -> user:${userId}] ${text}`);
   }
 
   onMessage(handler: (msg: IncomingMessage) => Promise<void>): void {

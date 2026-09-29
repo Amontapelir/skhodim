@@ -1,6 +1,13 @@
 import { Bot, Keyboard } from "@maxhub/max-bot-api";
 import { config } from "../config";
-import type { EventCard, IncomingCallback, IncomingMessage, MessengerAdapter } from "./MessengerAdapter";
+import type {
+  EventCard,
+  IncomingCallback,
+  IncomingMessage,
+  IncomingStart,
+  InviteNotification,
+  MessengerAdapter,
+} from "./MessengerAdapter";
 
 /**
  * Real MAX Bot API adapter, built on the official @maxhub/max-bot-api SDK
@@ -11,6 +18,7 @@ import type { EventCard, IncomingCallback, IncomingMessage, MessengerAdapter } f
  */
 export class MaxBotAdapter implements MessengerAdapter {
   private readonly bot: Bot;
+  private startHandlers: Array<(start: IncomingStart) => Promise<void>> = [];
 
   constructor(botToken: string = config.maxBotToken) {
     if (!botToken || botToken.startsWith("[")) {
@@ -19,13 +27,25 @@ export class MaxBotAdapter implements MessengerAdapter {
     this.bot = new Bot(botToken);
 
     // Entry point into the mini-app: MAX's own "start" screen for the bot.
+    // Sends the "Открыть" button, then runs the onboarding start handler
+    // (asks the card balance) so the user isn't left waiting on a blank chat.
     this.bot.on("bot_started", async (ctx) => {
       await ctx.reply("Привет! «Сходим?» — независимый неофициальный сервис для держателей Пушкинской карты.", {
         attachments: [
           Keyboard.inlineKeyboard([[Keyboard.button.openApp("Открыть Сходим?", config.miniappUrl)]]),
         ],
       });
+      if (ctx.chatId == null) return;
+      const chatId = String(ctx.chatId);
+      const userId = String(ctx.update.user.user_id);
+      for (const handler of this.startHandlers) {
+        await handler({ chatId, userId });
+      }
     });
+  }
+
+  onStart(handler: (start: IncomingStart) => Promise<void>): void {
+    this.startHandlers.push(handler);
   }
 
   async sendMessage(chatId: string, text: string): Promise<void> {
@@ -38,6 +58,14 @@ export class MaxBotAdapter implements MessengerAdapter {
     ]);
     await this.bot.api.sendMessageToChat(Number(chatId), `${card.title}\n${card.subtitle}`, {
       attachments: [keyboard],
+    });
+  }
+
+  async sendInviteNotification(userId: string, notification: InviteNotification): Promise<void> {
+    // sendMessageToUser reaches the user's 1:1 dialog with the bot directly
+    // by user_id — no need to know/store a chat_id for them.
+    await this.bot.api.sendMessageToUser(Number(userId), `Тебя зовут: ${notification.eventTitle}\n${notification.eventSubtitle}`, {
+      attachments: [Keyboard.inlineKeyboard([[Keyboard.button.openApp("Смотреть в Сходим?", config.miniappUrl)]])],
     });
   }
 

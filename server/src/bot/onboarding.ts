@@ -36,6 +36,23 @@ function parseAgeGroup(text: string): AgeGroup | null {
   return null;
 }
 
+const WELCOME_TEXT =
+  "Привет! «Сходим?» — независимый неофициальный сервис, не связан с оператором программы «Пушкинская карта», Минкультуры России или ВТБ.\n\nДавай настроим профиль. Какой у тебя остаток на Пушкинской карте (в рублях)?";
+
+/**
+ * Fired on "bot_started" — asks the balance question immediately instead of
+ * waiting for the user to type something first.
+ */
+export async function handleOnboardingStart(
+  bot: MessengerAdapter,
+  store: ProfileStore,
+  chatId: string,
+  userId: string
+): Promise<void> {
+  await store.save(userId, freshProfile());
+  await bot.sendMessage(chatId, WELCOME_TEXT);
+}
+
 /**
  * Three-question onboarding: card balance, cinema sub-limit, age. Also
  * handles `/profile` to let the user correct any saved value afterwards.
@@ -65,12 +82,11 @@ export async function handleOnboardingMessage(
 
   let profile = await store.get(userId);
   if (!profile) {
+    // Fallback for adapters/paths without a "start" event (e.g. the mock) —
+    // the real MAX bot normally reaches this state via handleOnboardingStart.
     profile = freshProfile();
     await store.save(userId, profile);
-    await bot.sendMessage(
-      chatId,
-      "Привет! «Сходим?» — независимый неофициальный сервис, не связан с оператором программы «Пушкинская карта», Минкультуры России или ВТБ.\n\nДавай настроим профиль. Какой у тебя остаток на Пушкинской карте (в рублях)?"
-    );
+    await bot.sendMessage(chatId, WELCOME_TEXT);
     return;
   }
 
