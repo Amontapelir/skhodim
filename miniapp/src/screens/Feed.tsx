@@ -19,7 +19,7 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
   const [categories, setCategories] = useState<string[]>([]);
   const [ratings, setRatings] = useState<number[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [view, setView] = useState<"list" | "map">("list");
+  const [mapVisible, setMapVisible] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sendingEvent, setSendingEvent] = useState<{ id: string; title: string } | null>(null);
@@ -117,20 +117,30 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
 
   return (
     <div>
+      {/* Overview map of every currently filtered event (not just invites) —
+          a fixed section at the top rather than a Список/Карта toggle, so it's
+          always in view alongside the list below. */}
+      {!loading && !error && visibleEvents.length > 0 && mapVisible && (
+        <div className="map-overview">
+          <EventMap
+            events={visibleEvents}
+            userLocation={mapUserLocation}
+            radiusCircle={mapRadiusCircle}
+            renderActions={renderMapActions}
+            onAction={handleMapAction}
+          />
+        </div>
+      )}
+
       <div className="filters-bar">
         <button className="filters-toggle" onClick={() => setFiltersOpen((v) => !v)}>
           Фильтры
           {activeFilterCount > 0 && <span className="filters-badge">{activeFilterCount}</span>}
           <span className={`filters-chevron ${filtersOpen ? "open" : ""}`}>⌄</span>
         </button>
-        <div className="view-switch">
-          <button className={`view-btn ${view === "list" ? "active" : ""}`} onClick={() => setView("list")}>
-            Список
-          </button>
-          <button className={`view-btn ${view === "map" ? "active" : ""}`} onClick={() => setView("map")}>
-            Карта
-          </button>
-        </div>
+        <button className="filters-toggle map-toggle" onClick={() => setMapVisible((v) => !v)}>
+          {mapVisible ? "Скрыть карту" : "Показать карту"}
+        </button>
       </div>
 
       {filtersOpen && (
@@ -181,19 +191,8 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
         </div>
       )}
 
-      {!loading && !error && visibleEvents.length > 0 && view === "map" && (
-        <EventMap
-          events={visibleEvents}
-          userLocation={mapUserLocation}
-          radiusCircle={mapRadiusCircle}
-          renderActions={renderMapActions}
-          onAction={handleMapAction}
-        />
-      )}
-
       {!loading &&
         !error &&
-        view === "list" &&
         visibleEvents.map((event) => (
           <EventCard
             key={event.id}

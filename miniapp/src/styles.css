@@ -488,6 +488,20 @@ body {
   position: relative;
 }
 
+/* Compact fixed-height variant for the always-visible overview map at the
+   top of the feed — the full-viewport .map-wrap sizing above is for the
+   dedicated invites map view, not this persistent strip above the list. */
+.map-overview .map-wrap {
+  height: 240px;
+  min-height: 200px;
+  max-height: 240px;
+  margin: 12px 14px 10px;
+}
+
+.map-toggle {
+  margin-left: auto;
+}
+
 .map-unavailable {
   display: flex;
   align-items: center;
