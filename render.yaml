@@ -26,6 +26,12 @@ services:
         value: kudago
       - key: BOT_ADAPTER
         value: mock
+      # Установите MAX_BOT_TOKEN в Render → skhodim-server → Environment,
+      # затем смените value выше на "max" и передеплойте. Без валидного
+      # токена MaxBotAdapter сам откатится на mock (см. index.ts) — сервер
+      # не упадёт, но и бот отвечать не будет.
+      - key: MAX_BOT_TOKEN
+        sync: false
       - key: CORS_ORIGIN
         value: "*"
 

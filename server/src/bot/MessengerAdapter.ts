@@ -25,4 +25,6 @@ export interface MessengerAdapter {
   sendCard(chatId: string, card: EventCard): Promise<void>;
   onMessage(handler: (msg: IncomingMessage) => Promise<void>): void;
   onCallback(handler: (cb: IncomingCallback) => Promise<void>): void;
+  /** Begin receiving updates (long polling for the real adapter). No-op for the mock. */
+  start?(): void;
 }

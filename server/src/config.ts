@@ -16,6 +16,8 @@ export const config = {
   },
   botAdapter: (process.env.BOT_ADAPTER ?? "mock") as "mock" | "max",
   maxBotToken: process.env.MAX_BOT_TOKEN ?? "",
+  /** Mini-app URL, used for the "Открыть" button MaxBotAdapter sends on bot_started. */
+  miniappUrl: process.env.MINIAPP_URL ?? "https://skhodim-miniapp.onrender.com",
   /** Comma-separated allowed origins for the frontend, or "*" for any (dev default). */
   corsOrigin: process.env.CORS_ORIGIN ?? "*",
 };
