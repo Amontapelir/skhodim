@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import type { EventDto, EventSession } from "../api";
 import { categoryMeta } from "../categories";
+import { sessionLabel } from "../sessionLabel";
 import { CategoryIcon } from "./CategoryIcon";
 import { TravelTimeButton } from "./TravelTimeButton";
 
@@ -11,11 +12,6 @@ function ticketDate(iso: string): { day: string; month: string; time: string } {
     month: d.toLocaleString("ru-RU", { month: "short" }).replace(".", ""),
     time: d.toLocaleString("ru-RU", { hour: "2-digit", minute: "2-digit" }),
   };
-}
-
-function sessionLabel(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleString("ru-RU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).replace(" г.", "");
 }
 
 export function EventCard({

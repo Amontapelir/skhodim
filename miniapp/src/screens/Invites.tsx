@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
-import { fetchIncomingInvites, respondToInvite, type EventDto, type InviteListItem } from "../api";
+import {
+  fetchEventSessions,
+  fetchIncomingInvites,
+  respondToInvite,
+  type EventDto,
+  type EventSession,
+  type InviteListItem,
+} from "../api";
 import { categoryMeta } from "../categories";
+import { sessionLabel } from "../sessionLabel";
 import { CategoryIcon } from "../components/CategoryIcon";
 import { EventMap } from "../components/EventMap";
 import { TravelTimeButton } from "../components/TravelTimeButton";
@@ -24,9 +32,11 @@ function ticketDate(iso: string): { day: string; month: string } {
 function InviteCard({
   invite,
   onRespond,
+  onProposeOtherDate,
 }: {
   invite: InviteListItem;
-  onRespond: (status: "going" | "cannot" | "propose_other_date") => void;
+  onRespond: (status: "going" | "cannot") => void;
+  onProposeOtherDate: () => void;
 }) {
   const meta = categoryMeta(invite.event.category);
   const { day, month } = ticketDate(invite.event.startsAt);
@@ -62,8 +72,8 @@ function InviteCard({
           <button className="btn btn-cannot" onClick={() => onRespond("cannot")}>
             Не могу
           </button>
-          <button className="btn btn-secondary" onClick={() => onRespond("propose_other_date")}>
-            Предложить другую дату
+          <button className="btn btn-secondary" onClick={onProposeOtherDate}>
+            Предложить другое время
           </button>
           <button className="btn btn-secondary" onClick={() => window.open(invite.event.purchaseUrl, "_blank")}>
             Сайт события
@@ -78,12 +88,71 @@ function InviteCard({
   );
 }
 
+function ProposeOtherTimeModal({
+  invite,
+  onClose,
+  onProposed,
+}: {
+  invite: InviteListItem;
+  onClose: () => void;
+  onProposed: (startsAt: string) => void;
+}) {
+  const [sessions, setSessions] = useState<EventSession[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEventSessions(invite.event.id)
+      .then(setSessions)
+      .finally(() => setLoading(false));
+  }, [invite.event.id]);
+
+  // The event itself is always among its own sessions — offer only the others.
+  const otherSessions = (sessions ?? []).filter((s) => s.id !== invite.event.id);
+
+  function proposeManually() {
+    const date = prompt("Предложите дату и время (YYYY-MM-DD HH:MM):");
+    if (!date) return;
+    onProposed(new Date(date).toISOString());
+  }
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
+        <p className="modal-title">Другое время для «{invite.event.title}»?</p>
+
+        {loading && <div className="empty-state">Загрузка сеансов…</div>}
+        {!loading && otherSessions.length > 0 && (
+          <div className="session-picker">
+            {otherSessions.map((s) => (
+              <button key={s.id} type="button" className="session-chip" onClick={() => onProposed(s.startsAt)}>
+                {sessionLabel(s.startsAt)} · {s.price} ₽
+              </button>
+            ))}
+          </div>
+        )}
+        {!loading && otherSessions.length === 0 && (
+          <div className="empty-state">Других известных сеансов этого события не нашлось.</div>
+        )}
+
+        <div className="modal-actions">
+          <button className="btn btn-secondary" onClick={onClose}>
+            Отмена
+          </button>
+          <button className="btn btn-primary" onClick={proposeManually}>
+            Указать вручную
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function InvitesMap({
   invites,
   onRespond,
 }: {
   invites: InviteListItem[];
-  onRespond: (inviteId: string, status: "going" | "cannot" | "propose_other_date") => void;
+  onRespond: (inviteId: string, status: "going" | "cannot") => void;
 }) {
   // Two invites can point at the same event (two friends called you to the
   // same thing) — the map collapses them into one pin, so route an action to
@@ -129,6 +198,7 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<"list" | "map">("list");
+  const [proposingInvite, setProposingInvite] = useState<InviteListItem | null>(null);
 
   async function reload() {
     setLoading(true);
@@ -147,14 +217,15 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
     reload();
   }, [maxUserId]);
 
-  async function respond(inviteId: string, status: "going" | "cannot" | "propose_other_date") {
-    if (status === "propose_other_date") {
-      const date = prompt("Предложите дату и время (YYYY-MM-DD HH:MM):");
-      if (!date) return;
-      await respondToInvite(inviteId, maxUserId, status, new Date(date).toISOString());
-    } else {
-      await respondToInvite(inviteId, maxUserId, status);
-    }
+  async function respond(inviteId: string, status: "going" | "cannot") {
+    await respondToInvite(inviteId, maxUserId, status);
+    await reload();
+  }
+
+  async function proposeOtherDate(startsAt: string) {
+    if (!proposingInvite) return;
+    await respondToInvite(proposingInvite.inviteId, maxUserId, "propose_other_date", startsAt);
+    setProposingInvite(null);
     await reload();
   }
 
@@ -179,8 +250,21 @@ export function Invites({ maxUserId }: { maxUserId: string }) {
         <InvitesMap invites={invites} onRespond={respond} />
       ) : (
         invites.map((invite) => (
-          <InviteCard key={invite.inviteId} invite={invite} onRespond={(status) => respond(invite.inviteId, status)} />
+          <InviteCard
+            key={invite.inviteId}
+            invite={invite}
+            onRespond={(status) => respond(invite.inviteId, status)}
+            onProposeOtherDate={() => setProposingInvite(invite)}
+          />
         ))
+      )}
+
+      {proposingInvite && (
+        <ProposeOtherTimeModal
+          invite={proposingInvite}
+          onClose={() => setProposingInvite(null)}
+          onProposed={proposeOtherDate}
+        />
       )}
     </div>
   );
