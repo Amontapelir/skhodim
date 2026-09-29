@@ -8,10 +8,11 @@ const VALID_STATUSES = ["going", "cannot", "propose_other_date"] as const;
 export function registerInviteRoutes(app: FastifyInstance, bot: MessengerAdapter) {
   // Create an invite from one user to a set of recipients for an event.
   app.post("/invites", async (req, reply) => {
-    const { eventId, fromMaxUserId, toMaxUserIds } = req.body as {
+    const { eventId, fromMaxUserId, toMaxUserIds, comment } = req.body as {
       eventId: string;
       fromMaxUserId: string;
       toMaxUserIds: string[];
+      comment?: string;
     };
 
     const fromUser = await db("users").where({ max_user_id: fromMaxUserId }).first();
@@ -21,7 +22,7 @@ export function registerInviteRoutes(app: FastifyInstance, bot: MessengerAdapter
     const venue = await db("venues").where({ id: event.venue_id }).first();
 
     const [invite] = await db("invites")
-      .insert({ event_id: eventId, from_user_id: fromUser.id })
+      .insert({ event_id: eventId, from_user_id: fromUser.id, comment: comment?.trim() || null })
       .returning("*");
 
     const recipients = await db("users").whereIn("max_user_id", toMaxUserIds);
@@ -42,6 +43,8 @@ export function registerInviteRoutes(app: FastifyInstance, bot: MessengerAdapter
         .sendInviteNotification(recipient.max_user_id, {
           eventTitle: eventDomain.title,
           eventSubtitle: `${venue?.name ?? ""}, ${startsAt}`.trim(),
+          fromDisplayName: fromUser.display_name,
+          comment: invite.comment,
         })
         .catch((err) => app.log.error({ err, recipient: recipient.max_user_id }, "sendInviteNotification failed"));
     }
@@ -59,7 +62,10 @@ export function registerInviteRoutes(app: FastifyInstance, bot: MessengerAdapter
     const inviteIds = myResponses.map((r) => r.invite_id);
     if (inviteIds.length === 0) return reply.send([]);
 
-    const invites = await db("invites").whereIn("id", inviteIds);
+    const invites = await db("invites")
+      .whereIn("invites.id", inviteIds)
+      .join("users as senders", "senders.id", "invites.from_user_id")
+      .select("invites.*", "senders.display_name as from_display_name", "senders.max_user_id as from_max_user_id");
     const eventIds = invites.map((i) => i.event_id);
     const events = await db("events").whereIn("id", eventIds);
     const eventsById = new Map(events.map((e) => [e.id, e]));
@@ -102,6 +108,8 @@ export function registerInviteRoutes(app: FastifyInstance, bot: MessengerAdapter
         event: eventWithVenue,
         fitsBalance,
         shortfall,
+        comment: invite.comment,
+        fromDisplayName: invite.from_display_name ?? invite.from_max_user_id,
         myStatus: responses.find((r) => r.userMaxId === maxUserId)?.status ?? "pending",
         responses,
       };

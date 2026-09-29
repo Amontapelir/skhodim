@@ -64,6 +64,8 @@ function InviteCard({
         <p className="ticket-meta">
           {new Date(invite.event.startsAt).toLocaleString("ru-RU")} · {invite.event.price} ₽
         </p>
+        {invite.fromDisplayName && <p className="invite-from">Зовёт: {invite.fromDisplayName}</p>}
+        {invite.comment && <p className="invite-comment">«{invite.comment}»</p>}
         {invite.event.description && <p className="card-description">{invite.event.description}</p>}
         <div className="ticket-actions">
           <button className="btn btn-going" onClick={() => onRespond("going")}>

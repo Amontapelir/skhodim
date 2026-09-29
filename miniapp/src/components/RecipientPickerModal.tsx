@@ -16,6 +16,7 @@ export function RecipientPickerModal({
 }) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
@@ -32,7 +33,7 @@ export function RecipientPickerModal({
   async function handleSend() {
     setSending(true);
     try {
-      await createInvite(eventId, maxUserId, selected);
+      await createInvite(eventId, maxUserId, selected, comment.trim() || undefined);
       onSent();
     } finally {
       setSending(false);
@@ -57,6 +58,14 @@ export function RecipientPickerModal({
             </label>
           ))}
         </div>
+
+        <textarea
+          className="invite-comment-input"
+          placeholder="Комментарий (необязательно) — например, «давай сходим, я угощаю»"
+          maxLength={280}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
 
         <div className="modal-actions">
           <button className="btn btn-secondary" onClick={onClose}>

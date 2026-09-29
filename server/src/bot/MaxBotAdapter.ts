@@ -62,9 +62,15 @@ export class MaxBotAdapter implements MessengerAdapter {
   }
 
   async sendInviteNotification(userId: string, notification: InviteNotification): Promise<void> {
+    const heading = notification.fromDisplayName
+      ? `🎟️ ${notification.fromDisplayName} зовёт на «${notification.eventTitle}»`
+      : `🎟️ Тебя зовут на «${notification.eventTitle}»`;
+    const lines = [heading, `📍 ${notification.eventSubtitle}`];
+    if (notification.comment) lines.push(`💬 «${notification.comment}»`);
+
     // sendMessageToUser reaches the user's 1:1 dialog with the bot directly
     // by user_id — no need to know/store a chat_id for them.
-    await this.bot.api.sendMessageToUser(Number(userId), `Тебя зовут: ${notification.eventTitle}\n${notification.eventSubtitle}`, {
+    await this.bot.api.sendMessageToUser(Number(userId), lines.join("\n"), {
       attachments: [Keyboard.inlineKeyboard([[Keyboard.button.openApp("Смотреть в Сходим?", config.miniappUrl)]])],
     });
   }

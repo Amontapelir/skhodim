@@ -690,6 +690,34 @@ body {
   accent-color: var(--primary);
 }
 
+.invite-comment-input {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 56px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.invite-comment {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.invite-from {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .modal-actions {
   display: flex;
   gap: 8px;

@@ -224,10 +224,12 @@ paths:
                 eventId: { type: string, format: uuid }
                 fromMaxUserId: { type: string }
                 toMaxUserIds: { type: array, items: { type: string } }
+                comment: { type: string, description: "Необязательный комментарий отправителя, виден получателю и приходит в MAX-уведомлении" }
               example:
                 eventId: "8f5aa582-8feb-42b9-80ee-94eb3f94ec20"
                 fromMaxUserId: "dev-user-2"
                 toMaxUserIds: ["dev-user-1"]
+                comment: "давай сходим, я угощаю"
       responses:
         "201":
           description: Приглашение создано
@@ -385,6 +387,8 @@ components:
         event: { $ref: "#/components/schemas/EventWithVenue" }
         fitsBalance: { type: boolean }
         shortfall: { type: number, description: "0, если помещается в остаток" }
+        comment: { type: string, nullable: true }
+        fromDisplayName: { type: string, nullable: true }
         myStatus: { type: string, enum: [pending, going, cannot, propose_other_date] }
         responses:
           type: array

@@ -33,6 +33,8 @@ export interface InviteListItem {
   fitsBalance: boolean;
   /** How much the price exceeds the recipient's remaining budget, in ₽. 0 when it fits. */
   shortfall: number;
+  comment: string | null;
+  fromDisplayName: string | null;
   myStatus: "pending" | "going" | "cannot" | "propose_other_date";
   responses: Array<{
     userMaxId: string;
@@ -107,11 +109,16 @@ export async function respondToInvite(
   if (!res.ok) throw new Error(`respondToInvite failed: ${res.status}`);
 }
 
-export async function createInvite(eventId: string, fromMaxUserId: string, toMaxUserIds: string[]): Promise<void> {
+export async function createInvite(
+  eventId: string,
+  fromMaxUserId: string,
+  toMaxUserIds: string[],
+  comment?: string
+): Promise<void> {
   const res = await fetch(`${BASE}/invites`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ eventId, fromMaxUserId, toMaxUserIds }),
+    body: JSON.stringify({ eventId, fromMaxUserId, toMaxUserIds, comment }),
   });
   if (!res.ok) throw new Error(`createInvite failed: ${res.status}`);
 }

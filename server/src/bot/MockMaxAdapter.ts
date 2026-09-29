@@ -21,7 +21,12 @@ export class MockMaxAdapter implements MessengerAdapter {
   }
 
   async sendInviteNotification(userId: string, notification: InviteNotification): Promise<void> {
-    const text = `Тебя зовут: ${notification.eventTitle}\n${notification.eventSubtitle}`;
+    const heading = notification.fromDisplayName
+      ? `🎟️ ${notification.fromDisplayName} зовёт на «${notification.eventTitle}»`
+      : `🎟️ Тебя зовут на «${notification.eventTitle}»`;
+    const lines = [heading, `📍 ${notification.eventSubtitle}`];
+    if (notification.comment) lines.push(`💬 «${notification.comment}»`);
+    const text = lines.join("\n");
     this.sent.push({ chatId: userId, kind: "message", content: text });
     console.log(`[mock-max -> user:${userId}] ${text}`);
   }

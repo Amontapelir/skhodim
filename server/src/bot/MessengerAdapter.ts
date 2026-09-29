@@ -24,6 +24,8 @@ export interface EventCard {
 export interface InviteNotification {
   eventTitle: string;
   eventSubtitle: string;
+  fromDisplayName: string | null;
+  comment: string | null;
 }
 
 /**
