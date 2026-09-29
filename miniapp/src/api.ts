@@ -44,6 +44,15 @@ export interface InviteListItem {
   }>;
 }
 
+export interface ProfileDto {
+  maxUserId: string;
+  displayName: string | null;
+  ageGroup: AgeGroup | null;
+  balance: number;
+  cinemaLimit: number;
+  onboardingComplete: boolean;
+}
+
 export interface Contact {
   maxUserId: string;
   displayName: string | null;
@@ -80,6 +89,12 @@ export async function fetchEvents(params: {
 export async function fetchEventSessions(eventId: string): Promise<EventSession[]> {
   const res = await fetch(`${BASE}/events/${eventId}/sessions`);
   if (!res.ok) throw new Error(`fetchEventSessions failed: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchProfile(maxUserId: string): Promise<ProfileDto> {
+  const res = await fetch(`${BASE}/users/${maxUserId}`);
+  if (!res.ok) throw new Error(`fetchProfile failed: ${res.status}`);
   return res.json();
 }
 

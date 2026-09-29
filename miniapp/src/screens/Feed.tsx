@@ -12,7 +12,16 @@ import { fitsReturnBy, distanceKm } from "../travelEstimate";
 
 const EMPTY_TIME_RANGE: TimeRange = {};
 
-export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { balance: number; cinemaLimit: number; ageGroup: AgeGroup } }) {
+export function Feed({
+  maxUserId,
+  profile,
+  onProfileChanged,
+}: {
+  maxUserId: string;
+  profile: { balance: number; cinemaLimit: number; ageGroup: AgeGroup };
+  /** Called after a successful "Купил" so the parent can refetch the real balance — this screen only holds the profile it was given, it doesn't own it. */
+  onProfileChanged?: () => void;
+}) {
   const [events, setEvents] = useState<EventDto[]>([]);
   const [fallback, setFallback] = useState(false);
   const [timeRange, setTimeRange] = useState<TimeRange>({});
@@ -48,6 +57,7 @@ export function Feed({ maxUserId, profile }: { maxUserId: string; profile: { bal
 
   async function handleBought(session: EventSession) {
     await markPurchased(maxUserId, session.id);
+    onProfileChanged?.();
     alert("Остаток обновлён.");
   }
 
