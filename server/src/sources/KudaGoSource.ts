@@ -31,6 +31,13 @@ interface KudaGoEvent {
   site_url: string;
 }
 
+// KudaGo titles are conventionally all-lowercase ("чайка", "дюна:
+// пророчество") — capitalize only the first letter, not the whole string,
+// since proper nouns and acronyms mid-title should stay as KudaGo wrote them.
+function capitalizeFirst(title: string): string {
+  return title.length > 0 ? title[0].toUpperCase() + title.slice(1) : title;
+}
+
 function stripHtml(html: string): string | null {
   const text = html.replace(/<[^>]+>/g, "").trim();
   return text.length > 0 ? text : null;
@@ -90,7 +97,7 @@ async function fetchCity(slug: string): Promise<RawEvent[]> {
     raw.push({
       externalId: String(ev.id),
       source: "kudago" as RawEvent["source"],
-      title: ev.title,
+      title: capitalizeFirst(ev.title),
       description: typeof ev.description === "string" ? stripHtml(ev.description) : null,
       venue: {
         name: ev.place.title,

@@ -19,7 +19,7 @@
       "category": "theatre",
       "minAge": 12,
       "price": 300,
-      "startsAt": "2026-10-05T18:00:00.000Z",
+      "startsAt": "2026-10-06T11:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1001"
     },
     {
@@ -35,8 +35,8 @@
       },
       "category": "theatre",
       "minAge": 14,
-      "price": 700,
-      "startsAt": "2026-10-03T11:00:00.000Z",
+      "price": 300,
+      "startsAt": "2026-10-27T13:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1002"
     },
     {
@@ -52,8 +52,8 @@
       },
       "category": "cinema",
       "minAge": 0,
-      "price": 250,
-      "startsAt": "2026-10-24T15:00:00.000Z",
+      "price": 400,
+      "startsAt": "2026-10-02T21:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1003"
     },
     {
@@ -70,7 +70,7 @@
       "category": "cinema",
       "minAge": 16,
       "price": 400,
-      "startsAt": "2026-10-15T16:00:00.000Z",
+      "startsAt": "2026-10-07T19:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1004"
     },
     {
@@ -86,12 +86,29 @@
       },
       "category": "concert",
       "minAge": 6,
-      "price": 900,
-      "startsAt": "2026-10-26T21:00:00.000Z",
+      "price": 700,
+      "startsAt": "2026-10-28T14:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1005"
     },
     {
-      "externalId": "E1006",
+      "externalId": "M2006",
+      "source": "test-mirror",
+      "title": "Симфония №9",
+      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "venue": {
+        "name": "ДК «Рассвет»",
+        "address": "Ленинградский пр-т, 78",
+        "lat": 55.7982,
+        "lon": 37.5312
+      },
+      "category": "concert",
+      "minAge": 6,
+      "price": 700,
+      "startsAt": "2026-10-28T14:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2006"
+    },
+    {
+      "externalId": "E1007",
       "source": "test",
       "title": "Ночь джаза",
       "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
@@ -103,1151 +120,1100 @@
       },
       "category": "concert",
       "minAge": 12,
-      "price": 300,
-      "startsAt": "2026-10-08T20:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1006"
-    },
-    {
-      "externalId": "E1007",
-      "source": "test",
-      "title": "Импрессионисты",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
-      "venue": {
-        "name": "Кинотеатр «Пионер»",
-        "address": "Кутузовский пр-т, 21",
-        "lat": 55.7391,
-        "lon": 37.5372
-      },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 500,
-      "startsAt": "2026-10-11T21:00:00.000Z",
+      "price": 1200,
+      "startsAt": "2026-10-08T10:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1007"
     },
     {
       "externalId": "E1008",
       "source": "test",
-      "title": "Космос и мы",
-      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
+      "title": "Импрессионисты",
+      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
       "venue": {
-        "name": "Планетарий",
-        "address": "ул. Садовая-Кудринская, 5",
-        "lat": 55.7639,
-        "lon": 37.5789
+        "name": "Кинотеатр «Пионер»",
+        "address": "Кутузовский пр-т, 21",
+        "lat": 55.7391,
+        "lon": 37.5372
       },
       "category": "exhibition",
-      "minAge": 6,
-      "price": 500,
-      "startsAt": "2026-10-13T17:00:00.000Z",
+      "minAge": 0,
+      "price": 700,
+      "startsAt": "2026-10-22T12:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1008"
     },
     {
       "externalId": "E1009",
       "source": "test",
-      "title": "Щелкунчик",
-      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "title": "Космос и мы",
+      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
       "venue": {
-        "name": "Третьяковская галерея",
-        "address": "Лаврушинский пер., 10",
-        "lat": 55.7415,
-        "lon": 37.6208
+        "name": "Планетарий",
+        "address": "ул. Садовая-Кудринская, 5",
+        "lat": 55.7639,
+        "lon": 37.5789
       },
-      "category": "theatre",
+      "category": "exhibition",
       "minAge": 6,
-      "price": 300,
-      "startsAt": "2026-10-08T16:00:00.000Z",
+      "price": 1200,
+      "startsAt": "2026-10-19T19:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1009"
     },
     {
       "externalId": "E1010",
       "source": "test",
-      "title": "Стендап-вечер",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+      "title": "Щелкунчик",
+      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
       "venue": {
-        "name": "Дом музыки",
-        "address": "Космодамианская наб., 52",
-        "lat": 55.735,
-        "lon": 37.6428
+        "name": "Третьяковская галерея",
+        "address": "Лаврушинский пер., 10",
+        "lat": 55.7415,
+        "lon": 37.6208
       },
-      "category": "concert",
-      "minAge": 18,
+      "category": "theatre",
+      "minAge": 6,
       "price": 500,
-      "startsAt": "2026-10-29T20:00:00.000Z",
+      "startsAt": "2026-10-26T21:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1010"
     },
     {
       "externalId": "E1011",
       "source": "test",
-      "title": "Гарри Поттер и философский камень",
-      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+      "title": "Стендап-вечер",
+      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
       "venue": {
-        "name": "Театр «Современник»",
-        "address": "Чистопрудный бул., 19А",
-        "lat": 55.7644,
-        "lon": 37.6531
+        "name": "Дом музыки",
+        "address": "Космодамианская наб., 52",
+        "lat": 55.735,
+        "lon": 37.6428
       },
-      "category": "cinema",
-      "minAge": 6,
-      "price": 250,
-      "startsAt": "2026-10-17T17:00:00.000Z",
+      "category": "concert",
+      "minAge": 18,
+      "price": 900,
+      "startsAt": "2026-10-12T21:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1011"
     },
     {
       "externalId": "M2012",
       "source": "test-mirror",
-      "title": "Гарри Поттер и философский камень!",
-      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+      "title": "Стендап-вечер!",
+      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
       "venue": {
-        "name": "Театр «Современник»",
-        "address": "Чистопрудный бул., 19А",
-        "lat": 55.7644,
-        "lon": 37.6531
+        "name": "Дом музыки",
+        "address": "Космодамианская наб., 52",
+        "lat": 55.735,
+        "lon": 37.6428
       },
-      "category": "cinema",
-      "minAge": 6,
-      "price": 250,
-      "startsAt": "2026-10-17T17:00:00.000Z",
+      "category": "concert",
+      "minAge": 18,
+      "price": 900,
+      "startsAt": "2026-10-12T21:00:00.000Z",
       "purchaseUrl": "https://example-mirror.org/e/M2012"
     },
     {
       "externalId": "E1013",
       "source": "test",
-      "title": "Русский авангард",
-      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
+      "title": "Гарри Поттер и философский камень",
+      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
       "venue": {
-        "name": "Кинотеатр «Художественный»",
-        "address": "Арбатская пл., 14",
-        "lat": 55.7521,
-        "lon": 37.6012
+        "name": "Театр «Современник»",
+        "address": "Чистопрудный бул., 19А",
+        "lat": 55.7644,
+        "lon": 37.6531
       },
-      "category": "museum",
-      "minAge": 12,
+      "category": "cinema",
+      "minAge": 6,
       "price": 300,
-      "startsAt": "2026-10-09T11:00:00.000Z",
+      "startsAt": "2026-10-04T13:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1013"
     },
     {
       "externalId": "E1014",
       "source": "test",
-      "title": "Евгений Онегин",
-      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
+      "title": "Русский авангард",
+      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
       "venue": {
-        "name": "Концертный зал «Зарядье»",
-        "address": "ул. Мосфильмовская, 1",
-        "lat": 55.7508,
-        "lon": 37.6297
+        "name": "Кинотеатр «Художественный»",
+        "address": "Арбатская пл., 14",
+        "lat": 55.7521,
+        "lon": 37.6012
       },
-      "category": "theatre",
+      "category": "museum",
       "minAge": 12,
-      "price": 900,
-      "startsAt": "2026-10-06T17:00:00.000Z",
+      "price": 700,
+      "startsAt": "2026-10-09T13:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1014"
     },
     {
-      "externalId": "M2015",
-      "source": "test-mirror",
-      "title": "Евгений Онегин!",
-      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
+      "externalId": "E1015",
+      "source": "test",
+      "title": "Мастер-класс по керамике",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
       "venue": {
         "name": "Концертный зал «Зарядье»",
         "address": "ул. Мосфильмовская, 1",
         "lat": 55.7508,
         "lon": 37.6297
       },
-      "category": "theatre",
-      "minAge": 12,
+      "category": "other",
+      "minAge": 6,
       "price": 900,
-      "startsAt": "2026-10-06T17:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2015"
+      "startsAt": "2026-10-30T17:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1015"
     },
     {
       "externalId": "E1016",
       "source": "test",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+      "title": "Квиз на эрудицию",
+      "description": "Командная интеллектуальная игра из шести раундов на самые разные темы.",
       "venue": {
         "name": "Музей современного искусства «Гараж»",
         "address": "Крымский Вал, 9",
         "lat": 55.7317,
         "lon": 37.6015
       },
-      "category": "theatre",
+      "category": "other",
       "minAge": 14,
       "price": 900,
-      "startsAt": "2026-10-09T18:00:00.000Z",
+      "startsAt": "2026-10-06T13:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1016"
     },
     {
-      "externalId": "M2017",
-      "source": "test-mirror",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
-      "venue": {
-        "name": "Музей современного искусства «Гараж»",
-        "address": "Крымский Вал, 9",
-        "lat": 55.7317,
-        "lon": 37.6015
-      },
-      "category": "theatre",
-      "minAge": 14,
-      "price": 900,
-      "startsAt": "2026-10-09T18:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2017"
-    },
-    {
-      "externalId": "E1018",
+      "externalId": "E1017",
       "source": "test",
-      "title": "Иван Васильевич меняет профессию",
-      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
+      "title": "Экскурсия по крышам центра",
+      "description": "Городская прогулка с гидом по историческим крышам с видом на центр города.",
       "venue": {
         "name": "ДК «Рассвет»",
         "address": "Ленинградский пр-т, 78",
         "lat": 55.7982,
         "lon": 37.5312
       },
-      "category": "cinema",
-      "minAge": 0,
-      "price": 250,
-      "startsAt": "2026-10-08T11:00:00.000Z",
+      "category": "other",
+      "minAge": 14,
+      "price": 900,
+      "startsAt": "2026-10-05T18:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1017"
+    },
+    {
+      "externalId": "E1018",
+      "source": "test",
+      "title": "Евгений Онегин",
+      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
+      "venue": {
+        "name": "Театр им. Вахтангова",
+        "address": "ул. Арбат, 26",
+        "lat": 55.7497,
+        "lon": 37.5924
+      },
+      "category": "theatre",
+      "minAge": 12,
+      "price": 300,
+      "startsAt": "2026-10-02T16:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1018"
     },
     {
       "externalId": "E1019",
       "source": "test",
-      "title": "Дюна: Пророчество",
-      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
-      "venue": {
-        "name": "Театр им. Вахтангова",
-        "address": "ул. Арбат, 26",
-        "lat": 55.7497,
-        "lon": 37.5924
-      },
-      "category": "cinema",
-      "minAge": 16,
-      "price": 250,
-      "startsAt": "2026-10-30T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1019"
-    },
-    {
-      "externalId": "E1020",
-      "source": "test",
-      "title": "Симфония №9",
-      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "title": "Чайка",
+      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
       "venue": {
         "name": "Кинотеатр «Пионер»",
         "address": "Кутузовский пр-т, 21",
         "lat": 55.7391,
         "lon": 37.5372
       },
-      "category": "concert",
-      "minAge": 6,
-      "price": 500,
-      "startsAt": "2026-10-23T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1020"
+      "category": "theatre",
+      "minAge": 14,
+      "price": 1200,
+      "startsAt": "2026-10-19T18:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1019"
+    },
+    {
+      "externalId": "M2020",
+      "source": "test-mirror",
+      "title": "Чайка!",
+      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+      "venue": {
+        "name": "Кинотеатр «Пионер»",
+        "address": "Кутузовский пр-т, 21",
+        "lat": 55.7391,
+        "lon": 37.5372
+      },
+      "category": "theatre",
+      "minAge": 14,
+      "price": 1200,
+      "startsAt": "2026-10-19T18:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2020"
     },
     {
       "externalId": "E1021",
       "source": "test",
-      "title": "Ночь джаза",
-      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
+      "title": "Иван Васильевич меняет профессию",
+      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
       "venue": {
         "name": "Планетарий",
         "address": "ул. Садовая-Кудринская, 5",
         "lat": 55.7639,
         "lon": 37.5789
       },
-      "category": "concert",
-      "minAge": 12,
-      "price": 500,
-      "startsAt": "2026-10-16T11:00:00.000Z",
+      "category": "cinema",
+      "minAge": 0,
+      "price": 400,
+      "startsAt": "2026-10-21T10:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1021"
     },
     {
       "externalId": "E1022",
       "source": "test",
-      "title": "Импрессионисты",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
+      "title": "Дюна: Пророчество",
+      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
       "venue": {
         "name": "Третьяковская галерея",
         "address": "Лаврушинский пер., 10",
         "lat": 55.7415,
         "lon": 37.6208
       },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 700,
-      "startsAt": "2026-10-23T10:00:00.000Z",
+      "category": "cinema",
+      "minAge": 16,
+      "price": 400,
+      "startsAt": "2026-10-01T19:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1022"
     },
     {
       "externalId": "E1023",
       "source": "test",
-      "title": "Космос и мы",
-      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
+      "title": "Симфония №9",
+      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
       "venue": {
         "name": "Дом музыки",
         "address": "Космодамианская наб., 52",
         "lat": 55.735,
         "lon": 37.6428
       },
-      "category": "exhibition",
+      "category": "concert",
       "minAge": 6,
-      "price": 900,
-      "startsAt": "2026-10-29T21:00:00.000Z",
+      "price": 700,
+      "startsAt": "2026-10-25T16:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1023"
     },
     {
       "externalId": "E1024",
       "source": "test",
-      "title": "Щелкунчик",
-      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "title": "Ночь джаза",
+      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
       "venue": {
         "name": "Театр «Современник»",
         "address": "Чистопрудный бул., 19А",
         "lat": 55.7644,
         "lon": 37.6531
       },
-      "category": "theatre",
-      "minAge": 6,
-      "price": 300,
-      "startsAt": "2026-10-13T15:00:00.000Z",
+      "category": "concert",
+      "minAge": 12,
+      "price": 900,
+      "startsAt": "2026-10-03T14:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1024"
     },
     {
       "externalId": "E1025",
       "source": "test",
-      "title": "Стендап-вечер",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+      "title": "Импрессионисты",
+      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
       "venue": {
         "name": "Кинотеатр «Художественный»",
         "address": "Арбатская пл., 14",
         "lat": 55.7521,
         "lon": 37.6012
       },
-      "category": "concert",
-      "minAge": 18,
+      "category": "exhibition",
+      "minAge": 0,
       "price": 300,
-      "startsAt": "2026-10-02T12:00:00.000Z",
+      "startsAt": "2026-10-22T15:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1025"
     },
     {
-      "externalId": "M2026",
-      "source": "test-mirror",
-      "title": "Стендап-вечер!",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
-      "venue": {
-        "name": "Кинотеатр «Художественный»",
-        "address": "Арбатская пл., 14",
-        "lat": 55.7521,
-        "lon": 37.6012
-      },
-      "category": "concert",
-      "minAge": 18,
-      "price": 300,
-      "startsAt": "2026-10-02T12:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2026"
-    },
-    {
-      "externalId": "E1027",
+      "externalId": "E1026",
       "source": "test",
-      "title": "Гарри Поттер и философский камень",
-      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+      "title": "Космос и мы",
+      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
       "venue": {
         "name": "Концертный зал «Зарядье»",
         "address": "ул. Мосфильмовская, 1",
         "lat": 55.7508,
         "lon": 37.6297
       },
-      "category": "cinema",
+      "category": "exhibition",
       "minAge": 6,
-      "price": 300,
-      "startsAt": "2026-10-14T14:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1027"
+      "price": 1200,
+      "startsAt": "2026-10-21T15:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1026"
     },
     {
-      "externalId": "E1028",
+      "externalId": "E1027",
       "source": "test",
-      "title": "Русский авангард",
-      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
+      "title": "Щелкунчик",
+      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
       "venue": {
         "name": "Музей современного искусства «Гараж»",
         "address": "Крымский Вал, 9",
         "lat": 55.7317,
         "lon": 37.6015
       },
-      "category": "museum",
-      "minAge": 12,
-      "price": 700,
-      "startsAt": "2026-10-08T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1028"
+      "category": "theatre",
+      "minAge": 6,
+      "price": 500,
+      "startsAt": "2026-10-22T16:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1027"
+    },
+    {
+      "externalId": "M2028",
+      "source": "test-mirror",
+      "title": "Щелкунчик!",
+      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "venue": {
+        "name": "Музей современного искусства «Гараж»",
+        "address": "Крымский Вал, 9",
+        "lat": 55.7317,
+        "lon": 37.6015
+      },
+      "category": "theatre",
+      "minAge": 6,
+      "price": 500,
+      "startsAt": "2026-10-22T16:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2028"
     },
     {
       "externalId": "E1029",
       "source": "test",
-      "title": "Евгений Онегин",
-      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
+      "title": "Стендап-вечер",
+      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
       "venue": {
         "name": "ДК «Рассвет»",
         "address": "Ленинградский пр-т, 78",
         "lat": 55.7982,
         "lon": 37.5312
       },
-      "category": "theatre",
-      "minAge": 12,
+      "category": "concert",
+      "minAge": 18,
       "price": 300,
-      "startsAt": "2026-10-10T17:00:00.000Z",
+      "startsAt": "2026-10-26T18:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1029"
     },
     {
       "externalId": "E1030",
       "source": "test",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+      "title": "Гарри Поттер и философский камень",
+      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
       "venue": {
         "name": "Театр им. Вахтангова",
         "address": "ул. Арбат, 26",
         "lat": 55.7497,
         "lon": 37.5924
       },
-      "category": "theatre",
-      "minAge": 14,
-      "price": 900,
-      "startsAt": "2026-10-29T15:00:00.000Z",
+      "category": "cinema",
+      "minAge": 6,
+      "price": 400,
+      "startsAt": "2026-10-23T20:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1030"
     },
     {
       "externalId": "E1031",
       "source": "test",
-      "title": "Иван Васильевич меняет профессию",
-      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
+      "title": "Русский авангард",
+      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
       "venue": {
         "name": "Кинотеатр «Пионер»",
         "address": "Кутузовский пр-т, 21",
         "lat": 55.7391,
         "lon": 37.5372
       },
-      "category": "cinema",
-      "minAge": 0,
-      "price": 250,
-      "startsAt": "2026-10-17T14:00:00.000Z",
+      "category": "museum",
+      "minAge": 12,
+      "price": 900,
+      "startsAt": "2026-10-21T15:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1031"
     },
     {
       "externalId": "E1032",
       "source": "test",
-      "title": "Дюна: Пророчество",
-      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
+      "title": "Мастер-класс по керамике",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
       "venue": {
         "name": "Планетарий",
         "address": "ул. Садовая-Кудринская, 5",
         "lat": 55.7639,
         "lon": 37.5789
       },
-      "category": "cinema",
-      "minAge": 16,
-      "price": 350,
-      "startsAt": "2026-10-22T12:00:00.000Z",
+      "category": "other",
+      "minAge": 6,
+      "price": 1200,
+      "startsAt": "2026-10-20T15:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1032"
     },
     {
-      "externalId": "E1033",
-      "source": "test",
-      "title": "Симфония №9",
-      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "externalId": "M2033",
+      "source": "test-mirror",
+      "title": "Мастер-класс по керамике",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
       "venue": {
-        "name": "Третьяковская галерея",
-        "address": "Лаврушинский пер., 10",
-        "lat": 55.7415,
-        "lon": 37.6208
+        "name": "Планетарий",
+        "address": "ул. Садовая-Кудринская, 5",
+        "lat": 55.7639,
+        "lon": 37.5789
       },
-      "category": "concert",
+      "category": "other",
       "minAge": 6,
-      "price": 700,
-      "startsAt": "2026-10-28T21:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1033"
+      "price": 1200,
+      "startsAt": "2026-10-20T15:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2033"
     },
     {
-      "externalId": "M2034",
-      "source": "test-mirror",
-      "title": "Симфония №9",
-      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "externalId": "E1034",
+      "source": "test",
+      "title": "Квиз на эрудицию",
+      "description": "Командная интеллектуальная игра из шести раундов на самые разные темы.",
       "venue": {
         "name": "Третьяковская галерея",
         "address": "Лаврушинский пер., 10",
         "lat": 55.7415,
         "lon": 37.6208
       },
-      "category": "concert",
-      "minAge": 6,
+      "category": "other",
+      "minAge": 14,
       "price": 700,
-      "startsAt": "2026-10-28T21:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2034"
+      "startsAt": "2026-10-09T17:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1034"
     },
     {
       "externalId": "E1035",
       "source": "test",
-      "title": "Ночь джаза",
-      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
+      "title": "Экскурсия по крышам центра",
+      "description": "Городская прогулка с гидом по историческим крышам с видом на центр города.",
       "venue": {
         "name": "Дом музыки",
         "address": "Космодамианская наб., 52",
         "lat": 55.735,
         "lon": 37.6428
       },
-      "category": "concert",
-      "minAge": 12,
-      "price": 300,
-      "startsAt": "2026-10-21T11:00:00.000Z",
+      "category": "other",
+      "minAge": 14,
+      "price": 700,
+      "startsAt": "2026-10-21T13:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1035"
     },
     {
       "externalId": "E1036",
       "source": "test",
-      "title": "Импрессионисты",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
+      "title": "Евгений Онегин",
+      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
       "venue": {
         "name": "Театр «Современник»",
         "address": "Чистопрудный бул., 19А",
         "lat": 55.7644,
         "lon": 37.6531
       },
-      "category": "exhibition",
-      "minAge": 0,
+      "category": "theatre",
+      "minAge": 12,
       "price": 300,
-      "startsAt": "2026-10-24T21:00:00.000Z",
+      "startsAt": "2026-10-08T18:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1036"
     },
     {
       "externalId": "E1037",
       "source": "test",
-      "title": "Космос и мы",
-      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
+      "title": "Чайка",
+      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
       "venue": {
         "name": "Кинотеатр «Художественный»",
         "address": "Арбатская пл., 14",
         "lat": 55.7521,
         "lon": 37.6012
       },
-      "category": "exhibition",
-      "minAge": 6,
-      "price": 900,
-      "startsAt": "2026-10-21T13:00:00.000Z",
+      "category": "theatre",
+      "minAge": 14,
+      "price": 500,
+      "startsAt": "2026-10-01T15:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1037"
     },
     {
       "externalId": "E1038",
       "source": "test",
-      "title": "Щелкунчик",
-      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "title": "Иван Васильевич меняет профессию",
+      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
       "venue": {
         "name": "Концертный зал «Зарядье»",
         "address": "ул. Мосфильмовская, 1",
         "lat": 55.7508,
         "lon": 37.6297
       },
-      "category": "theatre",
-      "minAge": 6,
-      "price": 500,
-      "startsAt": "2026-10-18T18:00:00.000Z",
+      "category": "cinema",
+      "minAge": 0,
+      "price": 250,
+      "startsAt": "2026-10-11T19:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1038"
     },
     {
-      "externalId": "M2039",
-      "source": "test-mirror",
-      "title": "Щелкунчик!",
-      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
-      "venue": {
-        "name": "Концертный зал «Зарядье»",
-        "address": "ул. Мосфильмовская, 1",
-        "lat": 55.7508,
-        "lon": 37.6297
-      },
-      "category": "theatre",
-      "minAge": 6,
-      "price": 500,
-      "startsAt": "2026-10-18T18:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2039"
-    },
-    {
-      "externalId": "E1040",
+      "externalId": "E1039",
       "source": "test",
-      "title": "Стендап-вечер",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+      "title": "Дюна: Пророчество",
+      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
       "venue": {
         "name": "Музей современного искусства «Гараж»",
         "address": "Крымский Вал, 9",
         "lat": 55.7317,
         "lon": 37.6015
       },
+      "category": "cinema",
+      "minAge": 16,
+      "price": 400,
+      "startsAt": "2026-10-27T12:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1039"
+    },
+    {
+      "externalId": "E1040",
+      "source": "test",
+      "title": "Симфония №9",
+      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "venue": {
+        "name": "ДК «Рассвет»",
+        "address": "Ленинградский пр-т, 78",
+        "lat": 55.7982,
+        "lon": 37.5312
+      },
       "category": "concert",
-      "minAge": 18,
+      "minAge": 6,
       "price": 300,
-      "startsAt": "2026-10-29T14:00:00.000Z",
+      "startsAt": "2026-10-20T15:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1040"
     },
     {
       "externalId": "E1041",
       "source": "test",
-      "title": "Гарри Поттер и философский камень",
-      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+      "title": "Ночь джаза",
+      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
       "venue": {
-        "name": "ДК «Рассвет»",
-        "address": "Ленинградский пр-т, 78",
-        "lat": 55.7982,
-        "lon": 37.5312
+        "name": "Театр им. Вахтангова",
+        "address": "ул. Арбат, 26",
+        "lat": 55.7497,
+        "lon": 37.5924
       },
-      "category": "cinema",
-      "minAge": 6,
-      "price": 250,
-      "startsAt": "2026-10-06T15:00:00.000Z",
+      "category": "concert",
+      "minAge": 12,
+      "price": 900,
+      "startsAt": "2026-10-02T14:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1041"
     },
     {
       "externalId": "E1042",
       "source": "test",
-      "title": "Русский авангард",
-      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
+      "title": "Импрессионисты",
+      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
       "venue": {
-        "name": "Театр им. Вахтангова",
-        "address": "ул. Арбат, 26",
-        "lat": 55.7497,
-        "lon": 37.5924
+        "name": "Кинотеатр «Пионер»",
+        "address": "Кутузовский пр-т, 21",
+        "lat": 55.7391,
+        "lon": 37.5372
       },
-      "category": "museum",
-      "minAge": 12,
-      "price": 1200,
-      "startsAt": "2026-10-25T20:00:00.000Z",
+      "category": "exhibition",
+      "minAge": 0,
+      "price": 300,
+      "startsAt": "2026-10-15T14:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1042"
     },
     {
       "externalId": "E1043",
       "source": "test",
-      "title": "Евгений Онегин",
-      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
-      "venue": {
-        "name": "Кинотеатр «Пионер»",
-        "address": "Кутузовский пр-т, 21",
-        "lat": 55.7391,
-        "lon": 37.5372
-      },
-      "category": "theatre",
-      "minAge": 12,
-      "price": 900,
-      "startsAt": "2026-10-19T17:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1043"
-    },
-    {
-      "externalId": "M2044",
-      "source": "test-mirror",
-      "title": "Евгений Онегин!",
-      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
-      "venue": {
-        "name": "Кинотеатр «Пионер»",
-        "address": "Кутузовский пр-т, 21",
-        "lat": 55.7391,
-        "lon": 37.5372
-      },
-      "category": "theatre",
-      "minAge": 12,
-      "price": 900,
-      "startsAt": "2026-10-19T17:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2044"
-    },
-    {
-      "externalId": "E1045",
-      "source": "test",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+      "title": "Космос и мы",
+      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
       "venue": {
         "name": "Планетарий",
         "address": "ул. Садовая-Кудринская, 5",
         "lat": 55.7639,
         "lon": 37.5789
       },
+      "category": "exhibition",
+      "minAge": 6,
+      "price": 900,
+      "startsAt": "2026-10-03T17:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1043"
+    },
+    {
+      "externalId": "E1044",
+      "source": "test",
+      "title": "Щелкунчик",
+      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "venue": {
+        "name": "Третьяковская галерея",
+        "address": "Лаврушинский пер., 10",
+        "lat": 55.7415,
+        "lon": 37.6208
+      },
       "category": "theatre",
-      "minAge": 14,
+      "minAge": 6,
       "price": 300,
-      "startsAt": "2026-10-07T10:00:00.000Z",
+      "startsAt": "2026-10-16T19:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1044"
+    },
+    {
+      "externalId": "E1045",
+      "source": "test",
+      "title": "Стендап-вечер",
+      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+      "venue": {
+        "name": "Дом музыки",
+        "address": "Космодамианская наб., 52",
+        "lat": 55.735,
+        "lon": 37.6428
+      },
+      "category": "concert",
+      "minAge": 18,
+      "price": 700,
+      "startsAt": "2026-10-19T19:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1045"
     },
     {
       "externalId": "M2046",
       "source": "test-mirror",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+      "title": "Стендап-вечер!",
+      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
       "venue": {
-        "name": "Планетарий",
-        "address": "ул. Садовая-Кудринская, 5",
-        "lat": 55.7639,
-        "lon": 37.5789
+        "name": "Дом музыки",
+        "address": "Космодамианская наб., 52",
+        "lat": 55.735,
+        "lon": 37.6428
       },
-      "category": "theatre",
-      "minAge": 14,
-      "price": 300,
-      "startsAt": "2026-10-07T10:00:00.000Z",
+      "category": "concert",
+      "minAge": 18,
+      "price": 700,
+      "startsAt": "2026-10-19T19:00:00.000Z",
       "purchaseUrl": "https://example-mirror.org/e/M2046"
     },
     {
       "externalId": "E1047",
       "source": "test",
-      "title": "Иван Васильевич меняет профессию",
-      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
+      "title": "Гарри Поттер и философский камень",
+      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
       "venue": {
-        "name": "Третьяковская галерея",
-        "address": "Лаврушинский пер., 10",
-        "lat": 55.7415,
-        "lon": 37.6208
+        "name": "Театр «Современник»",
+        "address": "Чистопрудный бул., 19А",
+        "lat": 55.7644,
+        "lon": 37.6531
       },
       "category": "cinema",
-      "minAge": 0,
-      "price": 400,
-      "startsAt": "2026-10-15T19:00:00.000Z",
+      "minAge": 6,
+      "price": 300,
+      "startsAt": "2026-10-04T17:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1047"
     },
     {
       "externalId": "E1048",
       "source": "test",
-      "title": "Дюна: Пророчество",
-      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
+      "title": "Русский авангард",
+      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
       "venue": {
-        "name": "Дом музыки",
-        "address": "Космодамианская наб., 52",
-        "lat": 55.735,
-        "lon": 37.6428
+        "name": "Кинотеатр «Художественный»",
+        "address": "Арбатская пл., 14",
+        "lat": 55.7521,
+        "lon": 37.6012
       },
-      "category": "cinema",
-      "minAge": 16,
-      "price": 350,
-      "startsAt": "2026-10-19T13:00:00.000Z",
+      "category": "museum",
+      "minAge": 12,
+      "price": 900,
+      "startsAt": "2026-10-10T15:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1048"
     },
     {
       "externalId": "E1049",
       "source": "test",
-      "title": "Симфония №9",
-      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "title": "Мастер-класс по керамике",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
       "venue": {
-        "name": "Театр «Современник»",
-        "address": "Чистопрудный бул., 19А",
-        "lat": 55.7644,
-        "lon": 37.6531
+        "name": "Концертный зал «Зарядье»",
+        "address": "ул. Мосфильмовская, 1",
+        "lat": 55.7508,
+        "lon": 37.6297
       },
-      "category": "concert",
+      "category": "other",
       "minAge": 6,
-      "price": 900,
-      "startsAt": "2026-10-05T14:00:00.000Z",
+      "price": 300,
+      "startsAt": "2026-10-19T20:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1049"
     },
     {
       "externalId": "M2050",
       "source": "test-mirror",
-      "title": "Симфония №9",
-      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "title": "Мастер-класс по керамике!",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
       "venue": {
-        "name": "Театр «Современник»",
-        "address": "Чистопрудный бул., 19А",
-        "lat": 55.7644,
-        "lon": 37.6531
+        "name": "Концертный зал «Зарядье»",
+        "address": "ул. Мосфильмовская, 1",
+        "lat": 55.7508,
+        "lon": 37.6297
       },
-      "category": "concert",
+      "category": "other",
       "minAge": 6,
-      "price": 900,
-      "startsAt": "2026-10-05T14:00:00.000Z",
+      "price": 300,
+      "startsAt": "2026-10-19T20:00:00.000Z",
       "purchaseUrl": "https://example-mirror.org/e/M2050"
     },
     {
       "externalId": "E1051",
       "source": "test",
-      "title": "Ночь джаза",
-      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
+      "title": "Квиз на эрудицию",
+      "description": "Командная интеллектуальная игра из шести раундов на самые разные темы.",
       "venue": {
-        "name": "Кинотеатр «Художественный»",
-        "address": "Арбатская пл., 14",
-        "lat": 55.7521,
-        "lon": 37.6012
+        "name": "Музей современного искусства «Гараж»",
+        "address": "Крымский Вал, 9",
+        "lat": 55.7317,
+        "lon": 37.6015
       },
-      "category": "concert",
-      "minAge": 12,
-      "price": 500,
-      "startsAt": "2026-10-06T19:00:00.000Z",
+      "category": "other",
+      "minAge": 14,
+      "price": 700,
+      "startsAt": "2026-10-11T17:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1051"
     },
     {
       "externalId": "E1052",
       "source": "test",
-      "title": "Импрессионисты",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
-      "venue": {
-        "name": "Концертный зал «Зарядье»",
-        "address": "ул. Мосфильмовская, 1",
-        "lat": 55.7508,
-        "lon": 37.6297
-      },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 500,
-      "startsAt": "2026-10-18T11:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1052"
-    },
-    {
-      "externalId": "M2053",
-      "source": "test-mirror",
-      "title": "Импрессионисты!",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
-      "venue": {
-        "name": "Концертный зал «Зарядье»",
-        "address": "ул. Мосфильмовская, 1",
-        "lat": 55.7508,
-        "lon": 37.6297
-      },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 500,
-      "startsAt": "2026-10-18T11:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2053"
-    },
-    {
-      "externalId": "E1054",
-      "source": "test",
-      "title": "Космос и мы",
-      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
-      "venue": {
-        "name": "Музей современного искусства «Гараж»",
-        "address": "Крымский Вал, 9",
-        "lat": 55.7317,
-        "lon": 37.6015
-      },
-      "category": "exhibition",
-      "minAge": 6,
-      "price": 300,
-      "startsAt": "2026-10-24T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1054"
-    },
-    {
-      "externalId": "E1055",
-      "source": "test",
-      "title": "Щелкунчик",
-      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "title": "Экскурсия по крышам центра",
+      "description": "Городская прогулка с гидом по историческим крышам с видом на центр города.",
       "venue": {
         "name": "ДК «Рассвет»",
         "address": "Ленинградский пр-т, 78",
         "lat": 55.7982,
         "lon": 37.5312
       },
+      "category": "other",
+      "minAge": 14,
+      "price": 900,
+      "startsAt": "2026-10-13T14:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1052"
+    },
+    {
+      "externalId": "E1053",
+      "source": "test",
+      "title": "Евгений Онегин",
+      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
+      "venue": {
+        "name": "Театр им. Вахтангова",
+        "address": "ул. Арбат, 26",
+        "lat": 55.7497,
+        "lon": 37.5924
+      },
       "category": "theatre",
-      "minAge": 6,
+      "minAge": 12,
       "price": 1200,
-      "startsAt": "2026-10-08T13:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1055"
+      "startsAt": "2026-10-09T19:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1053"
     },
     {
-      "externalId": "E1056",
+      "externalId": "E1054",
       "source": "test",
-      "title": "Стендап-вечер",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
-      "venue": {
-        "name": "Театр им. Вахтангова",
-        "address": "ул. Арбат, 26",
-        "lat": 55.7497,
-        "lon": 37.5924
-      },
-      "category": "concert",
-      "minAge": 18,
-      "price": 700,
-      "startsAt": "2026-10-04T12:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1056"
-    },
-    {
-      "externalId": "M2057",
-      "source": "test-mirror",
-      "title": "Стендап-вечер!",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
-      "venue": {
-        "name": "Театр им. Вахтангова",
-        "address": "ул. Арбат, 26",
-        "lat": 55.7497,
-        "lon": 37.5924
-      },
-      "category": "concert",
-      "minAge": 18,
-      "price": 700,
-      "startsAt": "2026-10-04T12:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2057"
-    },
-    {
-      "externalId": "E1058",
-      "source": "test",
-      "title": "Гарри Поттер и философский камень",
-      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+      "title": "Чайка",
+      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
       "venue": {
         "name": "Кинотеатр «Пионер»",
         "address": "Кутузовский пр-т, 21",
         "lat": 55.7391,
         "lon": 37.5372
       },
+      "category": "theatre",
+      "minAge": 14,
+      "price": 900,
+      "startsAt": "2026-10-29T10:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1054"
+    },
+    {
+      "externalId": "M2055",
+      "source": "test-mirror",
+      "title": "Чайка",
+      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
+      "venue": {
+        "name": "Кинотеатр «Пионер»",
+        "address": "Кутузовский пр-т, 21",
+        "lat": 55.7391,
+        "lon": 37.5372
+      },
+      "category": "theatre",
+      "minAge": 14,
+      "price": 900,
+      "startsAt": "2026-10-29T10:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2055"
+    },
+    {
+      "externalId": "E1056",
+      "source": "test",
+      "title": "Иван Васильевич меняет профессию",
+      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
+      "venue": {
+        "name": "Планетарий",
+        "address": "ул. Садовая-Кудринская, 5",
+        "lat": 55.7639,
+        "lon": 37.5789
+      },
       "category": "cinema",
+      "minAge": 0,
+      "price": 250,
+      "startsAt": "2026-10-12T20:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1056"
+    },
+    {
+      "externalId": "E1057",
+      "source": "test",
+      "title": "Дюна: Пророчество",
+      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
+      "venue": {
+        "name": "Третьяковская галерея",
+        "address": "Лаврушинский пер., 10",
+        "lat": 55.7415,
+        "lon": 37.6208
+      },
+      "category": "cinema",
+      "minAge": 16,
+      "price": 250,
+      "startsAt": "2026-10-21T10:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1057"
+    },
+    {
+      "externalId": "E1058",
+      "source": "test",
+      "title": "Симфония №9",
+      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "venue": {
+        "name": "Дом музыки",
+        "address": "Космодамианская наб., 52",
+        "lat": 55.735,
+        "lon": 37.6428
+      },
+      "category": "concert",
       "minAge": 6,
-      "price": 400,
-      "startsAt": "2026-10-19T10:00:00.000Z",
+      "price": 900,
+      "startsAt": "2026-10-05T18:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1058"
     },
     {
       "externalId": "E1059",
       "source": "test",
-      "title": "Русский авангард",
-      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
-      "venue": {
-        "name": "Планетарий",
-        "address": "ул. Садовая-Кудринская, 5",
-        "lat": 55.7639,
-        "lon": 37.5789
-      },
-      "category": "museum",
-      "minAge": 12,
-      "price": 300,
-      "startsAt": "2026-10-17T20:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1059"
-    },
-    {
-      "externalId": "E1060",
-      "source": "test",
-      "title": "Евгений Онегин",
-      "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
-      "venue": {
-        "name": "Третьяковская галерея",
-        "address": "Лаврушинский пер., 10",
-        "lat": 55.7415,
-        "lon": 37.6208
-      },
-      "category": "theatre",
-      "minAge": 12,
-      "price": 300,
-      "startsAt": "2026-10-10T18:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1060"
-    },
-    {
-      "externalId": "E1061",
-      "source": "test",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
-      "venue": {
-        "name": "Дом музыки",
-        "address": "Космодамианская наб., 52",
-        "lat": 55.735,
-        "lon": 37.6428
-      },
-      "category": "theatre",
-      "minAge": 14,
-      "price": 500,
-      "startsAt": "2026-10-11T14:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1061"
-    },
-    {
-      "externalId": "M2062",
-      "source": "test-mirror",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
-      "venue": {
-        "name": "Дом музыки",
-        "address": "Космодамианская наб., 52",
-        "lat": 55.735,
-        "lon": 37.6428
-      },
-      "category": "theatre",
-      "minAge": 14,
-      "price": 500,
-      "startsAt": "2026-10-11T14:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2062"
-    },
-    {
-      "externalId": "E1063",
-      "source": "test",
-      "title": "Иван Васильевич меняет профессию",
-      "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
+      "title": "Ночь джаза",
+      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
       "venue": {
         "name": "Театр «Современник»",
         "address": "Чистопрудный бул., 19А",
         "lat": 55.7644,
         "lon": 37.6531
       },
-      "category": "cinema",
-      "minAge": 0,
-      "price": 300,
-      "startsAt": "2026-10-11T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1063"
+      "category": "concert",
+      "minAge": 12,
+      "price": 700,
+      "startsAt": "2026-10-08T10:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1059"
     },
     {
-      "externalId": "E1064",
+      "externalId": "M2060",
+      "source": "test-mirror",
+      "title": "Ночь джаза",
+      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
+      "venue": {
+        "name": "Театр «Современник»",
+        "address": "Чистопрудный бул., 19А",
+        "lat": 55.7644,
+        "lon": 37.6531
+      },
+      "category": "concert",
+      "minAge": 12,
+      "price": 700,
+      "startsAt": "2026-10-08T10:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2060"
+    },
+    {
+      "externalId": "E1061",
       "source": "test",
-      "title": "Дюна: Пророчество",
-      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
+      "title": "Импрессионисты",
+      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
       "venue": {
         "name": "Кинотеатр «Художественный»",
         "address": "Арбатская пл., 14",
         "lat": 55.7521,
         "lon": 37.6012
       },
-      "category": "cinema",
-      "minAge": 16,
-      "price": 350,
-      "startsAt": "2026-10-20T14:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1064"
+      "category": "exhibition",
+      "minAge": 0,
+      "price": 500,
+      "startsAt": "2026-10-06T18:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1061"
     },
     {
-      "externalId": "E1065",
+      "externalId": "E1062",
       "source": "test",
-      "title": "Симфония №9",
-      "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
+      "title": "Космос и мы",
+      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
       "venue": {
         "name": "Концертный зал «Зарядье»",
         "address": "ул. Мосфильмовская, 1",
         "lat": 55.7508,
         "lon": 37.6297
       },
-      "category": "concert",
+      "category": "exhibition",
       "minAge": 6,
-      "price": 700,
-      "startsAt": "2026-10-22T20:00:00.000Z",
+      "price": 1200,
+      "startsAt": "2026-10-27T10:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1062"
+    },
+    {
+      "externalId": "E1063",
+      "source": "test",
+      "title": "Щелкунчик",
+      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "venue": {
+        "name": "Музей современного искусства «Гараж»",
+        "address": "Крымский Вал, 9",
+        "lat": 55.7317,
+        "lon": 37.6015
+      },
+      "category": "theatre",
+      "minAge": 6,
+      "price": 900,
+      "startsAt": "2026-10-27T19:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1063"
+    },
+    {
+      "externalId": "M2064",
+      "source": "test-mirror",
+      "title": "Щелкунчик",
+      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "venue": {
+        "name": "Музей современного искусства «Гараж»",
+        "address": "Крымский Вал, 9",
+        "lat": 55.7317,
+        "lon": 37.6015
+      },
+      "category": "theatre",
+      "minAge": 6,
+      "price": 900,
+      "startsAt": "2026-10-27T19:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2064"
+    },
+    {
+      "externalId": "E1065",
+      "source": "test",
+      "title": "Стендап-вечер",
+      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+      "venue": {
+        "name": "ДК «Рассвет»",
+        "address": "Ленинградский пр-т, 78",
+        "lat": 55.7982,
+        "lon": 37.5312
+      },
+      "category": "concert",
+      "minAge": 18,
+      "price": 500,
+      "startsAt": "2026-10-05T18:00:00.000Z",
       "purchaseUrl": "https://example.org/tickets/E1065"
     },
     {
       "externalId": "E1066",
       "source": "test",
-      "title": "Ночь джаза",
-      "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
-      "venue": {
-        "name": "Музей современного искусства «Гараж»",
-        "address": "Крымский Вал, 9",
-        "lat": 55.7317,
-        "lon": 37.6015
-      },
-      "category": "concert",
-      "minAge": 12,
-      "price": 300,
-      "startsAt": "2026-10-08T14:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1066"
-    },
-    {
-      "externalId": "E1067",
-      "source": "test",
-      "title": "Импрессионисты",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
-      "venue": {
-        "name": "ДК «Рассвет»",
-        "address": "Ленинградский пр-т, 78",
-        "lat": 55.7982,
-        "lon": 37.5312
-      },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 900,
-      "startsAt": "2026-10-10T11:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1067"
-    },
-    {
-      "externalId": "M2068",
-      "source": "test-mirror",
-      "title": "Импрессионисты!",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
-      "venue": {
-        "name": "ДК «Рассвет»",
-        "address": "Ленинградский пр-т, 78",
-        "lat": 55.7982,
-        "lon": 37.5312
-      },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 900,
-      "startsAt": "2026-10-10T11:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2068"
-    },
-    {
-      "externalId": "E1069",
-      "source": "test",
-      "title": "Космос и мы",
-      "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
+      "title": "Гарри Поттер и философский камень",
+      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
       "venue": {
         "name": "Театр им. Вахтангова",
         "address": "ул. Арбат, 26",
         "lat": 55.7497,
         "lon": 37.5924
       },
-      "category": "exhibition",
+      "category": "cinema",
       "minAge": 6,
-      "price": 500,
-      "startsAt": "2026-10-03T10:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1069"
+      "price": 250,
+      "startsAt": "2026-10-03T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1066"
     },
     {
-      "externalId": "E1070",
+      "externalId": "E1067",
       "source": "test",
-      "title": "Щелкунчик",
-      "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
+      "title": "Русский авангард",
+      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
       "venue": {
         "name": "Кинотеатр «Пионер»",
         "address": "Кутузовский пр-т, 21",
         "lat": 55.7391,
         "lon": 37.5372
       },
-      "category": "theatre",
-      "minAge": 6,
-      "price": 1200,
-      "startsAt": "2026-10-04T14:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1070"
+      "category": "museum",
+      "minAge": 12,
+      "price": 700,
+      "startsAt": "2026-10-20T19:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1067"
     },
     {
-      "externalId": "E1071",
+      "externalId": "E1068",
       "source": "test",
-      "title": "Стендап-вечер",
-      "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
+      "title": "Мастер-класс по керамике",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
       "venue": {
         "name": "Планетарий",
         "address": "ул. Садовая-Кудринская, 5",
         "lat": 55.7639,
         "lon": 37.5789
       },
-      "category": "concert",
-      "minAge": 18,
+      "category": "other",
+      "minAge": 6,
       "price": 700,
-      "startsAt": "2026-10-16T20:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1071"
+      "startsAt": "2026-10-16T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1068"
     },
     {
-      "externalId": "E1072",
+      "externalId": "M2069",
+      "source": "test-mirror",
+      "title": "Мастер-класс по керамике!",
+      "description": "Открытое занятие для всех желающих — лепка на гончарном круге под руководством мастера.",
+      "venue": {
+        "name": "Планетарий",
+        "address": "ул. Садовая-Кудринская, 5",
+        "lat": 55.7639,
+        "lon": 37.5789
+      },
+      "category": "other",
+      "minAge": 6,
+      "price": 700,
+      "startsAt": "2026-10-16T11:00:00.000Z",
+      "purchaseUrl": "https://example-mirror.org/e/M2069"
+    },
+    {
+      "externalId": "E1070",
       "source": "test",
-      "title": "Гарри Поттер и философский камень",
-      "description": "Первый фильм саги: мальчик узнаёт, что он волшебник, и отправляется в Хогвартс.",
+      "title": "Квиз на эрудицию",
+      "description": "Командная интеллектуальная игра из шести раундов на самые разные темы.",
       "venue": {
         "name": "Третьяковская галерея",
         "address": "Лаврушинский пер., 10",
         "lat": 55.7415,
         "lon": 37.6208
       },
-      "category": "cinema",
-      "minAge": 6,
-      "price": 300,
-      "startsAt": "2026-10-25T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1072"
+      "category": "other",
+      "minAge": 14,
+      "price": 700,
+      "startsAt": "2026-10-05T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1070"
     },
     {
-      "externalId": "E1073",
+      "externalId": "E1071",
       "source": "test",
-      "title": "Русский авангард",
-      "description": "Экспозиция живописи и графики русских авангардистов начала XX века.",
+      "title": "Экскурсия по крышам центра",
+      "description": "Городская прогулка с гидом по историческим крышам с видом на центр города.",
       "venue": {
         "name": "Дом музыки",
         "address": "Космодамианская наб., 52",
         "lat": 55.735,
         "lon": 37.6428
       },
-      "category": "museum",
-      "minAge": 12,
+      "category": "other",
+      "minAge": 14,
       "price": 700,
-      "startsAt": "2026-10-08T12:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1073"
+      "startsAt": "2026-10-08T18:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1071"
     },
     {
-      "externalId": "E1074",
+      "externalId": "E1072",
       "source": "test",
       "title": "Евгений Онегин",
       "description": "Классическая постановка романа Пушкина в стихах — история любви, чести и упущенных возможностей.",
@@ -1259,12 +1225,12 @@
       },
       "category": "theatre",
       "minAge": 12,
-      "price": 500,
-      "startsAt": "2026-10-12T12:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1074"
+      "price": 300,
+      "startsAt": "2026-10-09T15:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1072"
     },
     {
-      "externalId": "E1075",
+      "externalId": "E1073",
       "source": "test",
       "title": "Чайка",
       "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
@@ -1276,29 +1242,12 @@
       },
       "category": "theatre",
       "minAge": 14,
-      "price": 1200,
-      "startsAt": "2026-10-01T12:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1075"
+      "price": 500,
+      "startsAt": "2026-10-02T10:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1073"
     },
     {
-      "externalId": "M2076",
-      "source": "test-mirror",
-      "title": "Чайка",
-      "description": "Чеховская драма о художниках, разбитых сердцах и поиске своего места в искусстве.",
-      "venue": {
-        "name": "Кинотеатр «Художественный»",
-        "address": "Арбатская пл., 14",
-        "lat": 55.7521,
-        "lon": 37.6012
-      },
-      "category": "theatre",
-      "minAge": 14,
-      "price": 1200,
-      "startsAt": "2026-10-01T12:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2076"
-    },
-    {
-      "externalId": "E1077",
+      "externalId": "E1074",
       "source": "test",
       "title": "Иван Васильевич меняет профессию",
       "description": "Комедия о путешествии во времени, царе и обычном инженере, случайно поменявшихся местами.",
@@ -1310,12 +1259,12 @@
       },
       "category": "cinema",
       "minAge": 0,
-      "price": 400,
-      "startsAt": "2026-10-08T19:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1077"
+      "price": 250,
+      "startsAt": "2026-10-28T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1074"
     },
     {
-      "externalId": "E1078",
+      "externalId": "E1075",
       "source": "test",
       "title": "Дюна: Пророчество",
       "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
@@ -1327,29 +1276,12 @@
       },
       "category": "cinema",
       "minAge": 16,
-      "price": 250,
-      "startsAt": "2026-10-20T12:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1078"
+      "price": 400,
+      "startsAt": "2026-10-24T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1075"
     },
     {
-      "externalId": "M2079",
-      "source": "test-mirror",
-      "title": "Дюна: Пророчество",
-      "description": "Продолжение саги о пустынной планете Арракис, борьбе за власть и древних пророчествах.",
-      "venue": {
-        "name": "Музей современного искусства «Гараж»",
-        "address": "Крымский Вал, 9",
-        "lat": 55.7317,
-        "lon": 37.6015
-      },
-      "category": "cinema",
-      "minAge": 16,
-      "price": 250,
-      "startsAt": "2026-10-20T12:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2079"
-    },
-    {
-      "externalId": "E1080",
+      "externalId": "E1076",
       "source": "test",
       "title": "Симфония №9",
       "description": "Симфонический оркестр исполняет одно из самых масштабных произведений классической музыки.",
@@ -1361,12 +1293,12 @@
       },
       "category": "concert",
       "minAge": 6,
-      "price": 700,
-      "startsAt": "2026-10-15T15:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1080"
+      "price": 500,
+      "startsAt": "2026-10-05T16:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1076"
     },
     {
-      "externalId": "E1081",
+      "externalId": "E1077",
       "source": "test",
       "title": "Ночь джаза",
       "description": "Живой джаз в исполнении московских музыкантов — импровизации, соло и атмосфера ночного клуба.",
@@ -1378,12 +1310,12 @@
       },
       "category": "concert",
       "minAge": 12,
-      "price": 900,
-      "startsAt": "2026-10-15T20:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1081"
+      "price": 500,
+      "startsAt": "2026-10-03T12:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1077"
     },
     {
-      "externalId": "E1082",
+      "externalId": "E1078",
       "source": "test",
       "title": "Импрессионисты",
       "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
@@ -1395,29 +1327,12 @@
       },
       "category": "exhibition",
       "minAge": 0,
-      "price": 300,
-      "startsAt": "2026-10-18T17:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1082"
+      "price": 500,
+      "startsAt": "2026-10-03T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1078"
     },
     {
-      "externalId": "M2083",
-      "source": "test-mirror",
-      "title": "Импрессионисты",
-      "description": "Выставка репродукций французских импрессионистов — свет, цвет и мимолётные впечатления.",
-      "venue": {
-        "name": "Кинотеатр «Пионер»",
-        "address": "Кутузовский пр-т, 21",
-        "lat": 55.7391,
-        "lon": 37.5372
-      },
-      "category": "exhibition",
-      "minAge": 0,
-      "price": 300,
-      "startsAt": "2026-10-18T17:00:00.000Z",
-      "purchaseUrl": "https://example-mirror.org/e/M2083"
-    },
-    {
-      "externalId": "E1084",
+      "externalId": "E1079",
       "source": "test",
       "title": "Космос и мы",
       "description": "Интерактивная выставка о космосе: макеты ракет, скафандры и история освоения орбиты.",
@@ -1429,12 +1344,12 @@
       },
       "category": "exhibition",
       "minAge": 6,
-      "price": 300,
-      "startsAt": "2026-10-26T13:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1084"
+      "price": 900,
+      "startsAt": "2026-10-25T12:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1079"
     },
     {
-      "externalId": "E1085",
+      "externalId": "E1080",
       "source": "test",
       "title": "Щелкунчик",
       "description": "Балет-сказка Чайковского о девочке Мари, заколдованном принце и битве с Мышиным королём.",
@@ -1446,12 +1361,12 @@
       },
       "category": "theatre",
       "minAge": 6,
-      "price": 1200,
-      "startsAt": "2026-10-25T10:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1085"
+      "price": 900,
+      "startsAt": "2026-10-16T16:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1080"
     },
     {
-      "externalId": "E1086",
+      "externalId": "E1081",
       "source": "test",
       "title": "Стендап-вечер",
       "description": "Открытый микрофон и сеты приглашённых комиков — юмор для взрослой аудитории.",
@@ -1463,9 +1378,9 @@
       },
       "category": "concert",
       "minAge": 18,
-      "price": 500,
-      "startsAt": "2026-10-08T10:00:00.000Z",
-      "purchaseUrl": "https://example.org/tickets/E1086"
+      "price": 700,
+      "startsAt": "2026-10-10T11:00:00.000Z",
+      "purchaseUrl": "https://example.org/tickets/E1081"
     }
   ]
 }
