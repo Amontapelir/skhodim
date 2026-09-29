@@ -88,6 +88,31 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Error" }
 
+  /events/{eventId}/sessions:
+    get:
+      summary: Другие известные сеансы того же события (для «Предложить другое время»)
+      description: >
+        Все будущие события с тем же venue_id и normalized_title, что и
+        eventId, независимо от чьих-либо фильтров по цене/возрасту.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Список сеансов (может быть пустым, если других не найдено)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/EventSession" }
+        "404":
+          description: Событие не найдено
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
   /users/{maxUserId}:
     get:
       summary: Профиль пользователя
@@ -312,12 +337,26 @@ components:
         price: { type: number }
         startsAt: { type: string, format: date-time }
         purchaseUrl: { type: string }
+    EventSession:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        startsAt: { type: string, format: date-time }
+        price: { type: number }
     EventWithVenue:
       allOf:
         - $ref: "#/components/schemas/Event"
         - type: object
           properties:
             venue: { $ref: "#/components/schemas/Venue" }
+            sessions:
+              type: array
+              description: >
+                Present only when this event has more than one showtime at
+                the same venue (same normalized title) — every session
+                including this one, sorted by time. This card's own
+                id/startsAt/price are the earliest session.
+              items: { $ref: "#/components/schemas/EventSession" }
     User:
       type: object
       properties:

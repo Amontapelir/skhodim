@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { db } from "../db/knex";
 import { eventRowToDomain } from "../domain/mapRow";
 import { selectEvents } from "../domain/selection";
+import { groupBySession } from "../domain/sessionGrouping";
 import type { AgeGroup } from "../domain/types";
 
 const VALID_AGE_GROUPS: AgeGroup[] = ["14-15", "16-17", "18-22"];
@@ -70,6 +71,29 @@ export function registerEventRoutes(app: FastifyInstance) {
       };
     });
 
-    return reply.send({ events: eventsWithVenue, fallback: result.fallback });
+    // The same real event (same title+venue) often comes back as several
+    // rows — one per showtime — so collapse those into one card with a
+    // `sessions` list instead of showing duplicate cards (e.g. a film
+    // screened at 13:00/16:00/19:30 at the same cinema).
+    const grouped = groupBySession(eventsWithVenue);
+
+    return reply.send({ events: grouped, fallback: result.fallback });
+  });
+
+  // Other known upcoming sessions of the same real-world event (same venue +
+  // normalized title), regardless of any user's price/age filters — used by
+  // "Предложить другое время" so the recipient can pick a real alternative
+  // showtime instead of typing a date freehand.
+  app.get("/events/:eventId/sessions", async (req, reply) => {
+    const { eventId } = req.params as { eventId: string };
+    const event = await db("events").where({ id: eventId }).first();
+    if (!event) return reply.status(404).send({ error: "event not found" });
+
+    const siblings = await db("events")
+      .where({ venue_id: event.venue_id, normalized_title: event.normalized_title })
+      .andWhere("starts_at", ">=", new Date().toISOString())
+      .orderBy("starts_at", "asc");
+
+    return reply.send(siblings.map((row) => ({ id: row.id, startsAt: new Date(row.starts_at).toISOString(), price: row.price })));
   });
 }
