@@ -123,6 +123,17 @@ export async function createInvite(
   if (!res.ok) throw new Error(`createInvite failed: ${res.status}`);
 }
 
+/** Sends the event card to the user's own dialog with the bot; the returned mid feeds MAX Bridge's shareMaxContent. */
+export async function requestShareCard(eventId: string, fromMaxUserId: string): Promise<{ mid: string }> {
+  const res = await fetch(`${BASE}/events/${eventId}/share-card`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fromMaxUserId }),
+  });
+  if (!res.ok) throw new Error(`requestShareCard failed: ${res.status}`);
+  return res.json();
+}
+
 export async function markPurchased(maxUserId: string, eventId: string): Promise<void> {
   const res = await fetch(`${BASE}/users/${maxUserId}/purchases`, {
     method: "POST",

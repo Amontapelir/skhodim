@@ -113,6 +113,50 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Error" }
 
+  /events/{eventId}/share-card:
+    post:
+      summary: Отправить карточку события себе в бота, чтобы переслать её через MAX Bridge
+      description: >
+        Отправляет карточку события пользователю fromMaxUserId в его личный
+        диалог с ботом и возвращает mid этого сообщения. Мини-апп передаёт
+        mid в `window.WebApp.shareMaxContent({ mid, chatType: "DIALOG" })`
+        (MAX Bridge), чтобы открыть нативный экран пересылки в любой реальный
+        контакт/чат MAX — не только тех, кто уже писал этому боту.
+        См. https://dev.max.ru/docs/webapps/bridge
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fromMaxUserId]
+              properties:
+                fromMaxUserId: { type: string }
+      responses:
+        "200":
+          description: mid отправленного сообщения
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mid: { type: string }
+        "404":
+          description: Событие не найдено
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "502":
+          description: Не удалось отправить сообщение через MAX (например, нет валидного MAX_BOT_TOKEN)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
   /users/{maxUserId}:
     get:
       summary: Профиль пользователя

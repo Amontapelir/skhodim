@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { createInvite, fetchContacts, type Contact } from "../api";
+import { createInvite, fetchContacts, requestShareCard, type Contact } from "../api";
+import { canShareViaMaxBridge, getMaxUserId, shareMessageViaMaxBridge } from "../maxBridge";
 
 export function RecipientPickerModal({
   maxUserId,
@@ -19,6 +20,7 @@ export function RecipientPickerModal({
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [sharing, setSharing] = useState(false);
 
   useEffect(() => {
     fetchContacts(maxUserId)
@@ -40,10 +42,31 @@ export function RecipientPickerModal({
     }
   }
 
+  // MAX's own contact/chat picker (native, outside our contacts list) — for
+  // reaching anyone in the user's real MAX contacts, not just people who've
+  // already messaged this bot. Only meaningful inside a real MAX client.
+  async function handleShareViaMax() {
+    setSharing(true);
+    try {
+      const { mid } = await requestShareCard(eventId, getMaxUserId() ?? maxUserId);
+      shareMessageViaMaxBridge(mid);
+    } finally {
+      setSharing(false);
+    }
+  }
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
         <p className="modal-title">Кому отправить «{eventTitle}»?</p>
+
+        {canShareViaMaxBridge() && (
+          <button className="btn btn-secondary share-via-max-btn" disabled={sharing} onClick={handleShareViaMax}>
+            {sharing ? "Открываем…" : "Поделиться через MAX"}
+          </button>
+        )}
+
+        <p className="modal-subtitle">Или выберите из знакомых боту:</p>
 
         {loading && <div className="empty-state">Загрузка контактов…</div>}
         {!loading && contacts.length === 0 && (

@@ -28,6 +28,11 @@ export interface InviteNotification {
   comment: string | null;
 }
 
+export interface ShareableCardContent {
+  title: string;
+  subtitle: string;
+}
+
 /**
  * Contract every messenger integration implements, so the mock and the real
  * MAX Bot API adapter are interchangeable.
@@ -37,6 +42,14 @@ export interface MessengerAdapter {
   sendCard(chatId: string, card: EventCard): Promise<void>;
   /** Notifies a specific user (by their messenger user id, not a chat id) that they've been invited to an event. */
   sendInviteNotification(userId: string, notification: InviteNotification): Promise<void>;
+  /**
+   * Sends the card to the user's own dialog with the bot and returns the
+   * message id (`mid`), so the mini-app can hand it to MAX Bridge's
+   * `shareMaxContent({ mid, chatType: "DIALOG" })` and let the user forward
+   * it to any real MAX contact or group chat via MAX's own native picker —
+   * see https://dev.max.ru/docs/webapps/bridge ("Шеринг контента").
+   */
+  sendShareableCard(userId: string, content: ShareableCardContent): Promise<{ mid: string }>;
   onMessage(handler: (msg: IncomingMessage) => Promise<void>): void;
   onCallback(handler: (cb: IncomingCallback) => Promise<void>): void;
   /** Fired when a user opens the bot for the first time ("bot_started" in MAX). Optional — no equivalent event in the mock. */

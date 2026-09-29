@@ -4,10 +4,11 @@ import { eventRowToDomain } from "../domain/mapRow";
 import { selectEvents } from "../domain/selection";
 import { groupBySession } from "../domain/sessionGrouping";
 import type { AgeGroup } from "../domain/types";
+import type { MessengerAdapter } from "../bot/MessengerAdapter";
 
 const VALID_AGE_GROUPS: AgeGroup[] = ["14-15", "16-17", "18-22"];
 
-export function registerEventRoutes(app: FastifyInstance) {
+export function registerEventRoutes(app: FastifyInstance, bot: MessengerAdapter) {
   app.get("/events", async (req, reply) => {
     const q = req.query as Record<string, string | undefined>;
 
@@ -102,5 +103,37 @@ export function registerEventRoutes(app: FastifyInstance) {
         purchaseUrl: row.purchase_url,
       }))
     );
+  });
+
+  // Sends the event as a message to the sender's own dialog with the bot and
+  // returns its mid, for MAX Bridge's shareMaxContent({ mid, chatType })  —
+  // lets the mini-app open MAX's native forward picker so the user can send
+  // the card to any real MAX contact or group chat, not just contacts the
+  // bot already knows about. See docs: https://dev.max.ru/docs/webapps/bridge
+  app.post("/events/:eventId/share-card", async (req, reply) => {
+    const { eventId } = req.params as { eventId: string };
+    const { fromMaxUserId } = req.body as { fromMaxUserId: string };
+
+    const event = await db("events").where({ id: eventId }).first();
+    if (!event) return reply.status(404).send({ error: "event not found" });
+    const venue = await db("venues").where({ id: event.venue_id }).first();
+    const eventDomain = eventRowToDomain(event);
+    const startsAt = new Date(eventDomain.startsAt).toLocaleString("ru-RU", {
+      day: "numeric",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    try {
+      const { mid } = await bot.sendShareableCard(fromMaxUserId, {
+        title: eventDomain.title,
+        subtitle: `${venue?.name ?? ""}, ${startsAt}`.trim(),
+      });
+      return reply.send({ mid });
+    } catch (err) {
+      app.log.error({ err, fromMaxUserId }, "sendShareableCard failed");
+      return reply.status(502).send({ error: "failed to send shareable card via MAX" });
+    }
   });
 }

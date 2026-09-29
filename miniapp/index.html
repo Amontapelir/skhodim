@@ -13,6 +13,10 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- MAX Bridge — https://dev.max.ru/docs/webapps/bridge. Populates
+         window.WebApp; harmless no-op outside a real MAX client (falls back
+         to dev defaults, see src/maxBridge.ts). -->
+    <script src="https://st.max.ru/js/max-web-app.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

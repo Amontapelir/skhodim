@@ -30,7 +30,7 @@ function createBotAdapter(): MessengerAdapter {
 const bot = createBotAdapter();
 const profileStore = new DbProfileStore();
 
-registerEventRoutes(app);
+registerEventRoutes(app, bot);
 registerProfileRoutes(app);
 registerInviteRoutes(app, bot);
 

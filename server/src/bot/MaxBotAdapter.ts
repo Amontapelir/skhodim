@@ -7,6 +7,7 @@ import type {
   IncomingStart,
   InviteNotification,
   MessengerAdapter,
+  ShareableCardContent,
 } from "./MessengerAdapter";
 
 /**
@@ -73,6 +74,13 @@ export class MaxBotAdapter implements MessengerAdapter {
     await this.bot.api.sendMessageToUser(Number(userId), lines.join("\n"), {
       attachments: [Keyboard.inlineKeyboard([[Keyboard.button.openApp("Смотреть в Сходим?", config.miniappUrl)]])],
     });
+  }
+
+  async sendShareableCard(userId: string, content: ShareableCardContent): Promise<{ mid: string }> {
+    const message = await this.bot.api.sendMessageToUser(Number(userId), `${content.title}\n${content.subtitle}`, {
+      attachments: [Keyboard.inlineKeyboard([[Keyboard.button.openApp("Смотреть в Сходим?", config.miniappUrl)]])],
+    });
+    return { mid: message.body.mid };
   }
 
   onMessage(handler: (msg: IncomingMessage) => Promise<void>): void {

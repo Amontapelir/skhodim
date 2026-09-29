@@ -691,6 +691,18 @@ body {
   margin: 0 0 14px;
 }
 
+.share-via-max-btn {
+  width: 100%;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.modal-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
 .contact-list {
   display: flex;
   flex-direction: column;
